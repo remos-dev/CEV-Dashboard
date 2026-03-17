@@ -84,15 +84,15 @@
         }
 
         .kpi-card.green {
-            border-left-color: var(--accent);
+            border-left-color: #22a522;
         }
 
-        .kpi-card.orange {
-            border-left-color: var(--warn);
+        .kpi-card.yellow {
+            border-left-color: #f5c400;
         }
 
         .kpi-card.red {
-            border-left-color: #c62828;
+            border-left-color: #e01010;
         }
 
         .kpi-label {
@@ -188,12 +188,12 @@
             margin-bottom: 24px;
         }
 
-        .table-orange {
-            border-left: 4px solid var(--warn);
+        .table-yellow {
+            border-left: 4px solid #f5c400;
         }
 
         .table-red {
-            border-left: 4px solid #c62828;
+            border-left: 4px solid #e01010;
         }
 
         /* Gauge Bar */
@@ -421,7 +421,7 @@
 
             <!-- Approved RFCs -->
             <div class="chart-card full table-with-border">
-                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--accent);">Approved RFCs (Incorporated into Change Orders)</h3>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #1b8c1b;">Approved RFCs (Incorporated into Change Orders)</h3>
                 <table id="table-rfc-approved">
                     <thead>
                         <tr>
@@ -436,8 +436,8 @@
             </div>
 
             <!-- In Review RFCs -->
-            <div class="chart-card full table-with-border table-orange">
-                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--warn);">RFCs In Review (Pending Approval)</h3>
+            <div class="chart-card full table-with-border table-yellow">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #c9a200;">RFCs In Review (Pending Approval)</h3>
                 <table id="table-rfc-review">
                     <thead>
                         <tr>
@@ -453,7 +453,7 @@
 
             <!-- In Revision RFCs -->
             <div class="chart-card full table-with-border table-red">
-                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #c62828;">RFCs In Revision (Returned for Pricing Update)</h3>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #e01010;">RFCs In Revision (Returned for Pricing Update)</h3>
                 <table id="table-rfc-revision">
                     <thead>
                         <tr>
@@ -1186,12 +1186,12 @@
                 <div class="kpi-value">${formatCurrency(approvedTotal)}</div>
                 <div class="kpi-detail">${rfcApproved.length} RFCs incorporated</div>
             </div>
-            <div class="kpi-card orange">
+            <div class="kpi-card yellow">
                 <div class="kpi-label">In Review</div>
                 <div class="kpi-value">${formatCurrency(reviewTotal)}</div>
                 <div class="kpi-detail">${rfcInReview.length} RFCs pending</div>
             </div>
-            <div class="kpi-card orange">
+            <div class="kpi-card red">
                 <div class="kpi-label">In Revision</div>
                 <div class="kpi-value">${formatCurrency(revisionTotal)}</div>
                 <div class="kpi-detail">${rfcInRevision.length} RFCs at risk</div>
@@ -1215,22 +1215,22 @@
                     {
                         label: 'Approved',
                         data: [approvedTotal],
-                        backgroundColor: 'var(--accent)',
-                        borderColor: 'var(--accent)',
+                        backgroundColor: '#22a522',
+                        borderColor: '#1b8c1b',
                         borderWidth: 1
                     },
                     {
                         label: 'In Review',
                         data: [reviewTotal],
-                        backgroundColor: 'var(--warn)',
-                        borderColor: 'var(--warn)',
+                        backgroundColor: '#f5c400',
+                        borderColor: '#c9a200',
                         borderWidth: 1
                     },
                     {
                         label: 'In Revision',
                         data: [revisionTotal],
-                        backgroundColor: '#c62828',
-                        borderColor: '#c62828',
+                        backgroundColor: '#e01010',
+                        borderColor: '#b80000',
                         borderWidth: 1
                     }
                 ]
@@ -1272,7 +1272,7 @@
                 labels: ['Approved', 'In Review', 'In Revision'],
                 datasets: [{
                     data: [approvedTotal, reviewTotal, revisionTotal],
-                    backgroundColor: ['var(--accent)', 'var(--warn)', '#c62828'],
+                    backgroundColor: ['#22a522', '#f5c400', '#e01010'],
                     borderColor: '#fff',
                     borderWidth: 2
                 }]
