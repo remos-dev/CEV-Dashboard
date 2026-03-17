@@ -1,434 +1,1373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CEV (Steelhead) — Pay Application Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
-  :root {
-    --primary: #1a3a5c;
-    --accent: #2e7d32;
-    --warn: #e65100;
-    --bg: #f5f7fa;
-    --card: #ffffff;
-    --border: #dde3ea;
-    --text: #2c3e50;
-    --muted: #7f8c8d;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background:var(--bg); color:var(--text); }
-  .header { background:var(--primary); color:#fff; padding:28px 40px; }
-  .header h1 { font-size:24px; font-weight:600; }
-  .header .sub { font-size:14px; opacity:.8; margin-top:4px; }
-  .container { max-width:1200px; margin:0 auto; padding:24px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEV (Steelhead) — Pay Application Tracker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a3a5c;
+            --accent: #2e7d32;
+            --warn: #e65100;
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --border: #dde3ea;
+            --text: #2c3e50;
+            --muted: #7f8c8d;
+        }
 
-  .kpi-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:28px; }
-  .kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:20px 24px; }
-  .kpi .label { font-size:12px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:6px; }
-  .kpi .value { font-size:26px; font-weight:700; }
-  .kpi .detail { font-size:12px; color:var(--muted); margin-top:4px; }
-  .kpi.green .value { color:var(--accent); }
-  .kpi.orange .value { color:var(--warn); }
-  .kpi.red .value { color:#c62828; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .section-title { font-size:18px; font-weight:700; color:var(--primary); margin:32px 0 16px 0; padding-bottom:8px; border-bottom:2px solid var(--primary); }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-  .chart-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; margin-bottom:28px; }
-  .chart-card h2 { font-size:16px; margin-bottom:16px; }
-  .chart-wrap { position:relative; height:380px; }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
 
-  .table-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; overflow-x:auto; margin-bottom:28px; }
-  .table-card h2 { font-size:16px; margin-bottom:16px; }
-  table { width:100%; border-collapse:collapse; font-size:13px; }
-  th { background:#eef2f7; text-align:left; padding:10px 12px; font-weight:600; white-space:nowrap; border-bottom:2px solid var(--border); }
-  td { padding:10px 12px; border-bottom:1px solid var(--border); white-space:nowrap; }
-  tr:hover td { background:#f8fafc; }
-  .num { text-align:right; font-variant-numeric:tabular-nums; }
-  .pct { text-align:center; }
+        header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
 
-  /* Contingency gauge */
-  .gauge-row { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:28px; }
-  @media(max-width:800px){ .gauge-row{grid-template-columns:1fr;} }
-  .progress-bar-outer { background:#e8ecf1; border-radius:10px; height:32px; overflow:hidden; position:relative; }
-  .progress-bar-inner { height:100%; border-radius:10px; transition:width .5s; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; font-size:12px; font-weight:700; color:#fff; }
-  .progress-used { background: linear-gradient(90deg, #e65100, #ff8a50); }
-  .progress-remaining { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
+        header p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
 
-  .footer { text-align:center; padding:20px; font-size:12px; color:var(--muted); }
-  @media(max-width:700px){ .kpi .value{font-size:20px;} .chart-wrap{height:260px;} }
-</style>
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--border);
+        }
+
+        .kpi-card.green {
+            border-left-color: var(--accent);
+        }
+
+        .kpi-card.orange {
+            border-left-color: var(--warn);
+        }
+
+        .kpi-card.red {
+            border-left-color: #c62828;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .kpi-detail {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* Chart Cards */
+        .chart-card {
+            background-color: var(--card);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .chart-card.full {
+            grid-column: 1 / -1;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            background-color: var(--card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        thead {
+            background-color: #eef2f7;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        tbody tr:hover {
+            background-color: #fafbfc;
+        }
+
+        tbody tr.totals-row {
+            background-color: #f0f2f5;
+            font-weight: 600;
+        }
+
+        tbody tr.totals-row td {
+            border-top: 2px solid var(--border);
+            border-bottom: none;
+        }
+
+        /* Table with colored left border */
+        .table-with-border {
+            margin-bottom: 24px;
+        }
+
+        .table-orange {
+            border-left: 4px solid var(--warn);
+        }
+
+        .table-red {
+            border-left: 4px solid #c62828;
+        }
+
+        /* Gauge Bar */
+        .gauge-container {
+            margin: 20px 0;
+        }
+
+        .gauge-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .gauge-bar {
+            height: 24px;
+            background-color: #eef2f7;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--warn) 100%);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Number formatting */
+        .currency {
+            font-weight: 600;
+        }
+
+        .currency.green {
+            color: var(--accent);
+        }
+
+        .currency.red {
+            color: #c62828;
+        }
+
+        .currency.orange {
+            color: var(--warn);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--muted);
+            font-size: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tables responsive */
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px;
+            }
+
+            thead th, tbody td {
+                padding: 8px 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="header">
-  <h1>CEV (Steelhead) — Pay Application Tracker</h1>
-  <div class="sub">Project: 1211 SE Water Ave, Portland, OR 97214 &nbsp;|&nbsp; Owner: Live Nation Worldwide, Inc. &nbsp;|&nbsp; Contractor: Colas Construction, Inc.</div>
-</div>
-<div class="container">
+    <header>
+        <h1>CEV (Steelhead) — Pay Application Tracker</h1>
+        <p>Project: 1211 SE Water Ave, Portland, OR 97214 | Owner: Live Nation Worldwide, Inc. | Contractor: Colas Construction, Inc.</p>
+    </header>
 
-  <!-- PAY APP SECTION -->
-  <div class="section-title">Pay Application Overview</div>
-  <div class="kpi-row" id="kpis"></div>
-  <div class="chart-card">
-    <h2>Cumulative Paid to Date vs. Contract Value</h2>
-    <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
-  </div>
-  <div class="chart-card">
-    <h2>Monthly Payment Amounts</h2>
-    <div class="chart-wrap" style="height:280px;"><canvas id="barChart"></canvas></div>
-  </div>
-  <div class="table-card">
-    <h2>Pay Application Summary</h2>
-    <table id="summaryTable"></table>
-  </div>
+    <div class="container">
+        <!-- SECTION 1: PAY APPLICATION OVERVIEW -->
+        <section>
+            <h2 class="section-title">Pay Application Overview</h2>
 
-  <!-- SCHEDULE VS ACTUAL SECTION -->
-  <div class="section-title">Schedule vs. Actual Comparison</div>
-  <div class="kpi-row" id="schedKpis"></div>
-  <div class="chart-card">
-    <h2>Planned vs. Actual — Cumulative $ Completed</h2>
-    <div class="chart-wrap"><canvas id="schedDollarChart"></canvas></div>
-  </div>
-  <div class="chart-card">
-    <h2>Planned vs. Actual — % Complete</h2>
-    <div class="chart-wrap" style="height:320px;"><canvas id="schedPctChart"></canvas></div>
-  </div>
-  <div class="table-card">
-    <h2>Monthly Schedule vs. Actual Detail</h2>
-    <table id="schedTable"></table>
-  </div>
+            <div class="kpi-grid" id="section1-kpis"></div>
 
-  <!-- CONTINGENCY SECTION -->
-  <div class="section-title">Contractor Contingency Tracker</div>
-  <div class="kpi-row" id="contKpis"></div>
-  <div class="gauge-row">
-    <div class="chart-card" style="margin-bottom:0;">
-      <h2>Contingency Usage</h2>
-      <div style="margin-bottom:8px;font-size:13px;color:var(--muted);">Used vs. Total Budget</div>
-      <div class="progress-bar-outer">
-        <div class="progress-bar-inner progress-used" id="gaugeUsed"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:6px;color:var(--muted);">
-        <span id="gaugeUsedLabel"></span><span id="gaugeRemainingLabel"></span>
-      </div>
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-cumulative"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-monthly-payments"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card full">
+                <table id="table-pay-apps">
+                    <thead>
+                        <tr>
+                            <th>Pay App #</th>
+                            <th>Period</th>
+                            <th>Contract Sum</th>
+                            <th>Change Orders</th>
+                            <th>Completed & Stored</th>
+                            <th>Retainage</th>
+                            <th>Earned Less Ret.</th>
+                            <th>This Payment</th>
+                            <th>% Complete</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 2: SCHEDULE VS. ACTUAL -->
+        <section>
+            <h2 class="section-title">Schedule vs. Actual Comparison</h2>
+
+            <div class="kpi-grid" id="section2-kpis"></div>
+
+            <div class="chart-grid">
+                <div class="chart-card full">
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="chart-schedule-cumulative"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-schedule-percent"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card full">
+                <table id="table-schedule">
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Planned $</th>
+                            <th>Actual $</th>
+                            <th>$ Variance</th>
+                            <th>Planned %</th>
+                            <th>Actual %</th>
+                            <th>% Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 3: CONTRACTOR CONTINGENCY -->
+        <section>
+            <h2 class="section-title">Contractor Contingency Tracker</h2>
+
+            <div class="kpi-grid" id="section3-kpis"></div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div id="contingency-gauge"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-contingency-burndown"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card full">
+                <table id="table-contingency">
+                    <thead>
+                        <tr>
+                            <th>CMGC #</th>
+                            <th>RFC/RFI</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Initiated</th>
+                            <th>Submitted</th>
+                            <th>Pay App #</th>
+                            <th>Billed</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 4: RFC COST RISK REPORT -->
+        <section>
+            <h2 class="section-title">RFC Cost Risk Report</h2>
+
+            <div class="kpi-grid" id="section4-kpis"></div>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-rfc-status"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-container">
+                        <canvas id="chart-rfc-exposure"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approved RFCs -->
+            <div class="chart-card full table-with-border">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--accent);">Approved RFCs (Incorporated into Change Orders)</h3>
+                <table id="table-rfc-approved">
+                    <thead>
+                        <tr>
+                            <th>RFC #</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- In Review RFCs -->
+            <div class="chart-card full table-with-border table-orange">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--warn);">RFCs In Review (Pending Approval)</h3>
+                <table id="table-rfc-review">
+                    <thead>
+                        <tr>
+                            <th>RFC #</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <!-- In Revision RFCs -->
+            <div class="chart-card full table-with-border table-red">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #c62828;">RFCs In Revision (Returned for Pricing Update)</h3>
+                <table id="table-rfc-revision">
+                    <thead>
+                        <tr>
+                            <th>RFC #</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
     </div>
-    <div class="chart-card" style="margin-bottom:0;">
-      <h2>Contingency Burn-Down by Pay App</h2>
-      <div class="chart-wrap" style="height:220px;"><canvas id="contBurnChart"></canvas></div>
-    </div>
-  </div>
-  <div class="table-card">
-    <h2>Contingency Itemized Log</h2>
-    <table id="contTable"></table>
-  </div>
 
-</div>
-<div class="footer">Auto-generated dashboard — Last updated <span id="updateDate"></span></div>
+    <footer>
+        Auto-generated dashboard — Last updated March 17, 2026
+    </footer>
 
-<script>
-// ========== PAY APP DATA ==========
-const payApps = [
-  { num:1, period:"Sep 2025", originalContract:43011259, changeOrders:0, contractToDate:43011259, totalCompleted:636962.00, retainage:31848.10, earnedLessRetainage:605113.90, prevCertificates:0, currentPayment:605113.90 },
-  { num:2, period:"Oct 2025", originalContract:43011259, changeOrders:512965, contractToDate:43524224, totalCompleted:2303286.46, retainage:115164.32, earnedLessRetainage:2188122.14, prevCertificates:605113.90, currentPayment:1583008.24 },
-  { num:3, period:"Nov 2025", originalContract:43011259, changeOrders:866899, contractToDate:43878158, totalCompleted:4317062.46, retainage:215853.12, earnedLessRetainage:4101209.34, prevCertificates:2188122.14, currentPayment:1913087.20 },
-  { num:4, period:"Dec 2025", originalContract:43011259, changeOrders:1026871, contractToDate:44038130, totalCompleted:5825247.46, retainage:291262.37, earnedLessRetainage:5533985.09, prevCertificates:4101209.34, currentPayment:1432775.75 },
-  { num:5, period:"Jan 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:7593909.46, retainage:379695.47, earnedLessRetainage:7214213.99, prevCertificates:5533985.09, currentPayment:1680228.90 },
-  { num:6, period:"Feb 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:12104372.46, retainage:560986.77, earnedLessRetainage:11543385.69, prevCertificates:7214213.99, currentPayment:4329171.70 }
-];
+    <script>
+        // Utility function to format currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
 
-// ========== CONTINGENCY DATA ==========
-const contBudget = 804492.00;
-const contItems = [
-  { id:"CMGC-001", ref:"RFC006", desc:"Water Permit - Temp Water Meter", amount:4262.00, initiated:"9/18/25", submitted:"10/24/25", payApp:2, billed:4262.00 },
-  { id:"CMGC-002", ref:"RFC008", desc:"1200C Erosion Control", amount:10488.00, initiated:"11/13/25", submitted:"12/22/25", payApp:4, billed:10488.00 },
-  { id:"CMGC-003", ref:"RFC009", desc:"Added DSM Per Field Conditions", amount:40081.00, initiated:"11/15/25", submitted:"11/24/25", payApp:"3/4", billed:40081.00, note:"$26,950 in PA#3 + $13,131 in PA#4" },
-  { id:"CMGC-004", ref:"RFC010", desc:"MEP BIM Coordination", amount:15000.00, initiated:"11/17/25", submitted:"11/24/25", payApp:4, billed:15000.00 },
-  { id:"CMGC-005", ref:"RFC042", desc:"PGE Temp Power", amount:43288.00, initiated:"1/14/26", submitted:"1/25/26", payApp:5, billed:43288.00 },
-  { id:"CMGC-006", ref:"RFC003", desc:"IFC Changes Early Subs", amount:53014.00, initiated:"12/9/25", submitted:"1/25/26", payApp:5, billed:53014.00 },
-  { id:"CMGC-007", ref:"RFC022", desc:"RFI#19 Panel Board Submittal Clarification", amount:1363.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1363.00 },
-  { id:"CMGC-008", ref:"RFC031", desc:"RFI#38 - NE Lobby Sewer Stack Location", amount:1690.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1690.00 },
-  { id:"CMGC-009", ref:"RFC024", desc:"RFI#30 Server Connection Invert Elevation Discrepancy", amount:1516.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1516.00 },
-  { id:"CMGC-010", ref:"RFC056", desc:"RFI#73 - CMU Joist Pocket", amount:1417.00, initiated:"2/24/26", submitted:"2/24/26", payApp:6, billed:1417.00 },
-  { id:"CMGC-011", ref:"RFC018", desc:"RFI#26 Fixed Bollard by Generator Enclosure", amount:224.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:224.00 }
-];
+        // Utility function to format number
+        function formatNumber(value) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
 
-const fmt = v => '$' + v.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-const fmtK = v => '$' + (v/1e6).toFixed(2) + 'M';
-const fmtShort = v => v >= 1e6 ? '$'+(v/1e6).toFixed(2)+'M' : '$'+(v/1e3).toFixed(1)+'K';
-const fmtPct = v => v.toFixed(1) + '%';
+        // ========== SECTION 1: PAY APPLICATION DATA ==========
+        const payApps = [
+            { num:1, period:"Sep 2025", originalContract:43011259, changeOrders:0, contractToDate:43011259, totalCompleted:636962.00, retainage:31848.10, earnedLessRetainage:605113.90, prevCertificates:0, currentPayment:605113.90 },
+            { num:2, period:"Oct 2025", originalContract:43011259, changeOrders:512965, contractToDate:43524224, totalCompleted:2303286.46, retainage:115164.32, earnedLessRetainage:2188122.14, prevCertificates:605113.90, currentPayment:1583008.24 },
+            { num:3, period:"Nov 2025", originalContract:43011259, changeOrders:866899, contractToDate:43878158, totalCompleted:4317062.46, retainage:215853.12, earnedLessRetainage:4101209.34, prevCertificates:2188122.14, currentPayment:1913087.20 },
+            { num:4, period:"Dec 2025", originalContract:43011259, changeOrders:1026871, contractToDate:44038130, totalCompleted:5825247.46, retainage:291262.37, earnedLessRetainage:5533985.09, prevCertificates:4101209.34, currentPayment:1432775.75 },
+            { num:5, period:"Jan 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:7593909.46, retainage:379695.47, earnedLessRetainage:7214213.99, prevCertificates:5533985.09, currentPayment:1680228.90 },
+            { num:6, period:"Feb 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:12104372.46, retainage:560986.77, earnedLessRetainage:11543385.69, prevCertificates:7214213.99, currentPayment:4329171.70 }
+        ];
 
-// ========== PAY APP KPIs & CHARTS ==========
-const latest = payApps[payApps.length - 1];
-const totalPaid = payApps.reduce((s,a) => s + a.currentPayment, 0);
-const pctComplete = (latest.totalCompleted / latest.contractToDate) * 100;
-const balanceToFinish = latest.contractToDate - latest.earnedLessRetainage;
+        // Calculate Section 1 KPIs
+        const latestPayApp = payApps[payApps.length - 1];
+        const contractSum = latestPayApp.contractToDate;
+        const totalCompleted = latestPayApp.totalCompleted;
+        const totalPaid = latestPayApp.earnedLessRetainage;
+        const totalRetainage = latestPayApp.retainage;
+        const totalChangeOrders = latestPayApp.changeOrders;
+        const balanceToFinish = contractSum - totalCompleted;
+        const pctComplete = (totalCompleted / contractSum) * 100;
 
-const kpiData = [
-  { label:'Contract Sum to Date', value:fmtK(latest.contractToDate), detail:`Original: ${fmtK(latest.originalContract)}`, cls:'' },
-  { label:'Total Completed & Stored', value:fmtK(latest.totalCompleted), detail:fmtPct(pctComplete)+' complete', cls:'green' },
-  { label:'Total Paid to Contractor', value:fmtK(totalPaid), detail:`${payApps.length} pay applications`, cls:'green' },
-  { label:'Total Retainage Held', value:fmtK(latest.retainage), detail:fmtPct((latest.retainage/latest.totalCompleted)*100)+' of completed', cls:'orange' },
-  { label:'Balance to Finish (incl. Ret.)', value:fmtK(balanceToFinish), detail:fmtPct((balanceToFinish/latest.contractToDate)*100)+' remaining', cls:'' },
-  { label:'Net Change Orders', value:fmtK(latest.changeOrders), detail:fmtPct((latest.changeOrders/latest.originalContract)*100)+' of original contract', cls:'orange' }
-];
-const kpiRow = document.getElementById('kpis');
-kpiData.forEach(k => {
-  kpiRow.innerHTML += `<div class="kpi ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="detail">${k.detail}</div></div>`;
-});
+        // Render Section 1 KPIs
+        const kpi1Html = `
+            <div class="kpi-card">
+                <div class="kpi-label">Contract Sum to Date</div>
+                <div class="kpi-value">${formatCurrency(contractSum)}</div>
+                <div class="kpi-detail">Original + Change Orders</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Total Completed & Stored</div>
+                <div class="kpi-value">${formatCurrency(totalCompleted)}</div>
+                <div class="kpi-detail">${pctComplete.toFixed(1)}% of contract</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Total Paid to Contractor</div>
+                <div class="kpi-value">${formatCurrency(totalPaid)}</div>
+                <div class="kpi-detail">Less retainage held</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">Total Retainage Held</div>
+                <div class="kpi-value">${formatCurrency(totalRetainage)}</div>
+                <div class="kpi-detail">${((totalRetainage / totalCompleted) * 100).toFixed(2)}% of completed work</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Balance to Finish</div>
+                <div class="kpi-value">${formatCurrency(balanceToFinish)}</div>
+                <div class="kpi-detail">Remaining contract value</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">Net Change Orders</div>
+                <div class="kpi-value">${formatCurrency(totalChangeOrders)}</div>
+                <div class="kpi-detail">Total modifications</div>
+            </div>
+        `;
+        document.getElementById('section1-kpis').innerHTML = kpi1Html;
 
-// Line chart
-new Chart(document.getElementById('mainChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels: payApps.map(a=>a.period),
-    datasets:[
-      { label:'Contract Value (incl. COs)', data:payApps.map(a=>a.contractToDate), borderColor:'#1a3a5c', backgroundColor:'rgba(26,58,92,0.08)', borderWidth:2, pointRadius:4, fill:true, tension:0.2 },
-      { label:'Cumulative Completed & Stored', data:payApps.map(a=>a.totalCompleted), borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.08)', borderWidth:2.5, pointRadius:5, fill:true, tension:0.2 },
-      { label:'Cumulative Paid (Less Retainage)', data:payApps.map(a=>a.earnedLessRetainage), borderColor:'#1565c0', backgroundColor:'rgba(21,101,192,0.06)', borderWidth:2, pointRadius:4, borderDash:[6,3], fill:false, tension:0.2 }
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ tooltip:{ callbacks:{ label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y) }}, legend:{ position:'bottom', labels:{ usePointStyle:true, padding:20 }}},
-    scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>'$'+(v/1e6).toFixed(0)+'M' }, grid:{ color:'#eef2f7' }}, x:{ grid:{ display:false }}}
-  }
-});
+        // Populate Section 1 Table
+        const tableBody = document.querySelector('#table-pay-apps tbody');
+        let totalRow = {
+            contractToDate: 0,
+            changeOrders: 0,
+            totalCompleted: 0,
+            retainage: 0,
+            earnedLessRetainage: 0,
+            currentPayment: 0
+        };
 
-// Bar chart
-new Chart(document.getElementById('barChart').getContext('2d'), {
-  type:'bar',
-  data:{ labels:payApps.map(a=>a.period), datasets:[{ label:'Current Payment Due', data:payApps.map(a=>a.currentPayment), backgroundColor:'rgba(21,101,192,0.7)', borderRadius:6, barPercentage:0.6 }]},
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ tooltip:{ callbacks:{ label:ctx=>'Payment: '+fmt(ctx.parsed.y) }}, legend:{ display:false }},
-    scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>'$'+(v/1e6).toFixed(1)+'M' }, grid:{ color:'#eef2f7' }}, x:{ grid:{ display:false }}}
-  }
-});
+        payApps.forEach(pa => {
+            const row = document.createElement('tr');
+            const pct = ((pa.totalCompleted / pa.contractToDate) * 100).toFixed(1);
+            row.innerHTML = `
+                <td>${pa.num}</td>
+                <td>${pa.period}</td>
+                <td>${formatCurrency(pa.contractToDate)}</td>
+                <td>${formatCurrency(pa.changeOrders)}</td>
+                <td>${formatCurrency(pa.totalCompleted)}</td>
+                <td>${formatCurrency(pa.retainage)}</td>
+                <td>${formatCurrency(pa.earnedLessRetainage)}</td>
+                <td>${formatCurrency(pa.currentPayment)}</td>
+                <td>${pct}%</td>
+            `;
+            tableBody.appendChild(row);
 
-// Pay App summary table
-const cols = ['Pay App #','Period','Contract Sum','Change Orders','Completed & Stored','Retainage','Earned Less Ret.','This Payment','% Complete'];
-let html = '<thead><tr>' + cols.map(c=>`<th class="${['Pay App #','Period','% Complete'].includes(c)?'':'num'}">${c}</th>`).join('') + '</tr></thead><tbody>';
-payApps.forEach(a => {
-  const pct = ((a.totalCompleted/a.contractToDate)*100).toFixed(1)+'%';
-  html += `<tr><td>${a.num}</td><td>${a.period}</td><td class="num">${fmt(a.contractToDate)}</td><td class="num">${fmt(a.changeOrders)}</td><td class="num">${fmt(a.totalCompleted)}</td><td class="num">${fmt(a.retainage)}</td><td class="num">${fmt(a.earnedLessRetainage)}</td><td class="num" style="font-weight:600">${fmt(a.currentPayment)}</td><td class="pct">${pct}</td></tr>`;
-});
-html += `<tr style="font-weight:700;background:#eef2f7;"><td colspan="2">TOTALS</td><td class="num">${fmt(latest.contractToDate)}</td><td class="num">${fmt(latest.changeOrders)}</td><td class="num">${fmt(latest.totalCompleted)}</td><td class="num">${fmt(latest.retainage)}</td><td class="num">${fmt(latest.earnedLessRetainage)}</td><td class="num">${fmt(totalPaid)}</td><td class="pct">${fmtPct(pctComplete)}</td></tr></tbody>`;
-document.getElementById('summaryTable').innerHTML = html;
+            totalRow.contractToDate += pa.contractToDate;
+            totalRow.changeOrders += pa.changeOrders;
+            totalRow.totalCompleted += pa.totalCompleted;
+            totalRow.retainage += pa.retainage;
+            totalRow.earnedLessRetainage += pa.earnedLessRetainage;
+            totalRow.currentPayment += pa.currentPayment;
+        });
 
-// ========== SCHEDULE VS ACTUAL ==========
-// Planned cumulative $ from P6 schedule (derived from division schedule values x planned timeframes)
-const plannedSchedule = [
-  { month:"Sep 2025", cumPlanned:1009459.80, monthlyPlanned:1009459.80 },
-  { month:"Oct 2025", cumPlanned:2018919.59, monthlyPlanned:1009459.80 },
-  { month:"Nov 2025", cumPlanned:3011479.39, monthlyPlanned:992559.80 },
-  { month:"Dec 2025", cumPlanned:4513596.18, monthlyPlanned:1502116.79 },
-  { month:"Jan 2026", cumPlanned:6015712.97, monthlyPlanned:1502116.79 },
-  { month:"Feb 2026", cumPlanned:7517829.76, monthlyPlanned:1502116.79 },
-  { month:"Mar 2026", cumPlanned:10356671.05, monthlyPlanned:2838841.29 },
-  { month:"Apr 2026", cumPlanned:12814620.34, monthlyPlanned:2457949.29 },
-  { month:"May 2026", cumPlanned:15272569.63, monthlyPlanned:2457949.29 },
-  { month:"Jun 2026", cumPlanned:18546774.54, monthlyPlanned:3274204.90 },
-  { month:"Jul 2026", cumPlanned:21800639.44, monthlyPlanned:3253864.90 },
-  { month:"Aug 2026", cumPlanned:24749544.72, monthlyPlanned:2948905.28 },
-  { month:"Sep 2026", cumPlanned:27221610.39, monthlyPlanned:2472065.67 },
-  { month:"Oct 2026", cumPlanned:29693676.07, monthlyPlanned:2472065.67 },
-  { month:"Nov 2026", cumPlanned:31956346.24, monthlyPlanned:2262670.17 },
-  { month:"Dec 2026", cumPlanned:34284737.21, monthlyPlanned:2328390.97 },
-  { month:"Jan 2027", cumPlanned:36291872.18, monthlyPlanned:2007134.97 },
-  { month:"Feb 2027", cumPlanned:38169189.90, monthlyPlanned:1877317.72 },
-  { month:"Mar 2027", cumPlanned:40323771.38, monthlyPlanned:2154581.47 },
-  { month:"Apr 2027", cumPlanned:42638316.37, monthlyPlanned:2314545.00 },
-  { month:"May 2027", cumPlanned:43842337.95, monthlyPlanned:1204021.58 },
-  { month:"Jun 2027", cumPlanned:44740277.87, monthlyPlanned:897939.92 },
-  { month:"Jul 2027", cumPlanned:45099571.00, monthlyPlanned:359293.13 }
-];
+        // Add totals row
+        const totalsRow = document.createElement('tr');
+        totalsRow.className = 'totals-row';
+        const finalPct = ((totalRow.totalCompleted / totalRow.contractToDate) * 100).toFixed(1);
+        totalsRow.innerHTML = `
+            <td colspan="2"><strong>TOTALS</strong></td>
+            <td>${formatCurrency(totalRow.contractToDate)}</td>
+            <td>${formatCurrency(totalRow.changeOrders)}</td>
+            <td>${formatCurrency(totalRow.totalCompleted)}</td>
+            <td>${formatCurrency(totalRow.retainage)}</td>
+            <td>${formatCurrency(totalRow.earnedLessRetainage)}</td>
+            <td>${formatCurrency(totalRow.currentPayment)}</td>
+            <td>${finalPct}%</td>
+        `;
+        tableBody.appendChild(totalsRow);
 
-const contractTotal = 45099571.00;
+        // Chart 1: Cumulative Paid vs Contract Value
+        const ctx1 = document.getElementById('chart-cumulative').getContext('2d');
+        const cumulativePaid = payApps.map(pa => pa.earnedLessRetainage);
+        const contractValues = payApps.map(pa => pa.contractToDate);
+        const cumulativeCompleted = payApps.map(pa => pa.totalCompleted);
+        const labels1 = payApps.map(pa => pa.period);
 
-// Build comparison arrays — only months where we have actuals
-const schedLabels = plannedSchedule.map(s => s.month);
-const cumPlannedData = plannedSchedule.map(s => s.cumPlanned);
-const cumActualData = schedLabels.map(m => {
-  const pa = payApps.find(a => a.period === m);
-  return pa ? pa.totalCompleted : null;
-});
-const plannedPctData = cumPlannedData.map(v => (v/contractTotal)*100);
-const actualPctData = cumActualData.map(v => v !== null ? (v/contractTotal)*100 : null);
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: labels1,
+                datasets: [
+                    {
+                        label: 'Contract Value',
+                        data: contractValues,
+                        borderColor: 'var(--primary)',
+                        backgroundColor: 'rgba(26, 58, 92, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'var(--primary)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Cumulative Completed',
+                        data: cumulativeCompleted,
+                        borderColor: 'var(--accent)',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'var(--accent)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Cumulative Paid (Less Ret.)',
+                        data: cumulativePaid,
+                        borderColor: '#2196F3',
+                        borderDash: [5, 5],
+                        fill: false,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2196F3',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cumulative Paid to Date vs. Contract Value',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => '$' + (value / 1000000).toFixed(1) + 'M' }
+                    }
+                }
+            }
+        });
 
-// Schedule KPIs
-const lastActualIdx = cumActualData.reduce((last, v, i) => v !== null ? i : last, -1);
-const lastActualPlanned = cumPlannedData[lastActualIdx];
-const lastActualVal = cumActualData[lastActualIdx];
-const dollarVariance = lastActualVal - lastActualPlanned;
-const pctVariance = (lastActualVal/contractTotal)*100 - (lastActualPlanned/contractTotal)*100;
-const isAhead = dollarVariance >= 0;
+        // Chart 2: Monthly Payment Amounts
+        const ctx2 = document.getElementById('chart-monthly-payments').getContext('2d');
+        const currentPayments = payApps.map(pa => pa.currentPayment);
 
-const schedKpiData = [
-  { label:'Planned % Complete (Schedule)', value:fmtPct((lastActualPlanned/contractTotal)*100), detail:'Per baseline schedule', cls:'' },
-  { label:'Actual % Complete', value:fmtPct((lastActualVal/contractTotal)*100), detail:'Per pay applications', cls:'green' },
-  { label:'Schedule Variance ($)', value:(isAhead?'+':'')+fmtShort(dollarVariance), detail: isAhead ? 'Ahead of schedule' : 'Behind schedule', cls: isAhead ? 'green' : 'red' },
-  { label:'Schedule Variance (%)', value:(isAhead?'+':'')+fmtPct(pctVariance), detail: isAhead ? 'Ahead of baseline' : 'Behind baseline', cls: isAhead ? 'green' : 'red' }
-];
-const schedKpiRow = document.getElementById('schedKpis');
-schedKpiData.forEach(k => {
-  schedKpiRow.innerHTML += `<div class="kpi ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="detail">${k.detail}</div></div>`;
-});
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: labels1,
+                datasets: [{
+                    label: 'Current Payment',
+                    data: currentPayments,
+                    backgroundColor: 'var(--accent)',
+                    borderColor: 'var(--accent)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Monthly Payment Amounts',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => '$' + (value / 1000000).toFixed(1) + 'M' }
+                    }
+                }
+            }
+        });
 
-// $ Comparison chart — full S-curve with actual overlay
-new Chart(document.getElementById('schedDollarChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels: schedLabels,
-    datasets:[
-      {
-        label:'Planned (Schedule Baseline)',
-        data: cumPlannedData,
-        borderColor:'#9e9e9e', backgroundColor:'rgba(158,158,158,0.08)',
-        borderWidth:2, borderDash:[8,4], pointRadius:3, fill:true, tension:0.3, order: 2
-      },
-      {
-        label:'Actual Completed & Stored',
-        data: cumActualData,
-        borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.12)',
-        borderWidth:3, pointRadius:6, pointBackgroundColor:'#2e7d32', fill:true, tension:0.2, order: 1
-      },
-      {
-        label:'Actual Paid (Less Retainage)',
-        data: schedLabels.map(m => { const pa = payApps.find(a=>a.period===m); return pa ? pa.earnedLessRetainage : null; }),
-        borderColor:'#1565c0', backgroundColor:'rgba(21,101,192,0.06)',
-        borderWidth:3, pointRadius:6, pointBackgroundColor:'#1565c0', borderDash:[6,3], fill:false, tension:0.2,
-        spanGaps: true, order: 0
-      }
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{
-      tooltip:{ callbacks:{ label:ctx => ctx.parsed.y !== null ? ctx.dataset.label+': '+fmt(ctx.parsed.y) : '' }},
-      legend:{ position:'bottom', labels:{ usePointStyle:true, padding:16 }}
-    },
-    scales:{
-      y:{ beginAtZero:true, ticks:{ callback:v=>'$'+(v/1e6).toFixed(0)+'M' }, grid:{ color:'#eef2f7' }},
-      x:{ grid:{ display:false }, ticks:{ maxRotation:45, font:{size:10} }}
-    }
-  }
-});
+        // ========== SECTION 2: SCHEDULE VS ACTUAL ==========
+        const plannedSchedule = [
+            { month:"Sep 2025", cumPlanned:1009459.80 },
+            { month:"Oct 2025", cumPlanned:2018919.59 },
+            { month:"Nov 2025", cumPlanned:3011479.39 },
+            { month:"Dec 2025", cumPlanned:4513596.18 },
+            { month:"Jan 2026", cumPlanned:6015712.97 },
+            { month:"Feb 2026", cumPlanned:7517829.76 },
+            { month:"Mar 2026", cumPlanned:10356671.05 },
+            { month:"Apr 2026", cumPlanned:12814620.34 },
+            { month:"May 2026", cumPlanned:15272569.63 },
+            { month:"Jun 2026", cumPlanned:18546774.54 },
+            { month:"Jul 2026", cumPlanned:21800639.44 },
+            { month:"Aug 2026", cumPlanned:24749544.72 },
+            { month:"Sep 2026", cumPlanned:27221610.39 },
+            { month:"Oct 2026", cumPlanned:29693676.07 },
+            { month:"Nov 2026", cumPlanned:31956346.24 },
+            { month:"Dec 2026", cumPlanned:34284737.21 },
+            { month:"Jan 2027", cumPlanned:36291872.18 },
+            { month:"Feb 2027", cumPlanned:38169189.90 },
+            { month:"Mar 2027", cumPlanned:40323771.38 },
+            { month:"Apr 2027", cumPlanned:42638316.37 },
+            { month:"May 2027", cumPlanned:43842337.95 },
+            { month:"Jun 2027", cumPlanned:44740277.87 },
+            { month:"Jul 2027", cumPlanned:45099571.00 }
+        ];
 
-// % Comparison chart
-new Chart(document.getElementById('schedPctChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels: schedLabels,
-    datasets:[
-      {
-        label:'Planned % Complete',
-        data: plannedPctData,
-        borderColor:'#9e9e9e', backgroundColor:'rgba(158,158,158,0.06)',
-        borderWidth:2, borderDash:[8,4], pointRadius:3, fill:true, tension:0.3
-      },
-      {
-        label:'Actual % Complete',
-        data: actualPctData,
-        borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.12)',
-        borderWidth:3, pointRadius:6, pointBackgroundColor:'#2e7d32', fill:true, tension:0.2
-      }
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{
-      tooltip:{ callbacks:{ label:ctx => ctx.parsed.y !== null ? ctx.dataset.label+': '+ctx.parsed.y.toFixed(1)+'%' : '' }},
-      legend:{ position:'bottom', labels:{ usePointStyle:true, padding:16 }},
-      annotation: {}
-    },
-    scales:{
-      y:{ beginAtZero:true, max:105, ticks:{ callback:v=>v+'%' }, grid:{ color:'#eef2f7' }},
-      x:{ grid:{ display:false }, ticks:{ maxRotation:45, font:{size:10} }}
-    }
-  }
-});
+        const contractTotal = 45099571.00;
 
-// Schedule vs Actual detail table
-const schedCols = ['Period','Planned $','Actual $','$ Variance','Planned %','Actual %','% Variance','Status'];
-let shtml = '<thead><tr>' + schedCols.map(c=>`<th class="${['Period','Status'].includes(c)?'':'num'}">${c}</th>`).join('') + '</tr></thead><tbody>';
-payApps.forEach((a,i) => {
-  const pln = plannedSchedule[i];
-  const dVar = a.totalCompleted - pln.cumPlanned;
-  const pPln = (pln.cumPlanned/contractTotal)*100;
-  const pAct = (a.totalCompleted/contractTotal)*100;
-  const pVar = pAct - pPln;
-  const status = dVar >= 0 ? '<span style="color:#2e7d32;font-weight:700;">Ahead</span>' : '<span style="color:#c62828;font-weight:700;">Behind</span>';
-  shtml += `<tr><td>${a.period}</td><td class="num">${fmt(pln.cumPlanned)}</td><td class="num">${fmt(a.totalCompleted)}</td><td class="num" style="color:${dVar>=0?'#2e7d32':'#c62828'};font-weight:600;">${(dVar>=0?'+':'')+fmt(dVar)}</td><td class="pct">${pPln.toFixed(1)}%</td><td class="pct">${pAct.toFixed(1)}%</td><td class="pct" style="color:${pVar>=0?'#2e7d32':'#c62828'};font-weight:600;">${(pVar>=0?'+':'')+pVar.toFixed(1)}%</td><td class="pct">${status}</td></tr>`;
-});
-shtml += '</tbody>';
-document.getElementById('schedTable').innerHTML = shtml;
+        // Build actual data (only 6 months with pay apps)
+        const actualByMonth = {};
+        payApps.forEach(pa => {
+            actualByMonth[pa.period] = {
+                completed: pa.totalCompleted,
+                paid: pa.earnedLessRetainage
+            };
+        });
 
-// ========== CONTINGENCY KPIs & CHARTS ==========
-const contUsed = contItems.reduce((s,i) => s + i.amount, 0);
-const contRemaining = contBudget - contUsed;
-const contPctUsed = (contUsed/contBudget)*100;
-const contPctRemaining = 100 - contPctUsed;
+        // Calculate Schedule KPIs
+        const plannedPct = (plannedSchedule[5].cumPlanned / contractTotal) * 100;
+        const actualPct = (latestPayApp.totalCompleted / contractTotal) * 100;
+        const schedVarDollars = latestPayApp.totalCompleted - plannedSchedule[5].cumPlanned;
+        const schedVarPct = actualPct - plannedPct;
 
-const contKpiData = [
-  { label:'Contingency Budget', value:fmtShort(contBudget), detail:'Line item 12152', cls:'' },
-  { label:'Total Used', value:fmtShort(contUsed), detail:fmtPct(contPctUsed)+' of budget  ·  '+contItems.length+' items', cls: contPctUsed > 50 ? 'red' : 'orange' },
-  { label:'Remaining', value:fmtShort(contRemaining), detail:fmtPct(contPctRemaining)+' available', cls:'green' },
-  { label:'Total Billed', value:fmtShort(contItems.reduce((s,i)=>s+i.billed,0)), detail:'Included in pay applications', cls:'' }
-];
-const contKpiRow = document.getElementById('contKpis');
-contKpiData.forEach(k => {
-  contKpiRow.innerHTML += `<div class="kpi ${k.cls}"><div class="label">${k.label}</div><div class="value">${k.value}</div><div class="detail">${k.detail}</div></div>`;
-});
+        const kpi2Html = `
+            <div class="kpi-card">
+                <div class="kpi-label">Planned % Complete</div>
+                <div class="kpi-value">${plannedPct.toFixed(1)}%</div>
+                <div class="kpi-detail">Per P6 Schedule (Feb 2026)</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Actual % Complete</div>
+                <div class="kpi-value">${actualPct.toFixed(1)}%</div>
+                <div class="kpi-detail">Based on pay applications</div>
+            </div>
+            <div class="kpi-card ${schedVarDollars >= 0 ? 'green' : 'red'}">
+                <div class="kpi-label">Schedule Variance $</div>
+                <div class="kpi-value">${formatCurrency(schedVarDollars)}</div>
+                <div class="kpi-detail">${schedVarDollars >= 0 ? 'Ahead' : 'Behind'} of schedule</div>
+            </div>
+            <div class="kpi-card ${schedVarPct >= 0 ? 'green' : 'red'}">
+                <div class="kpi-label">Schedule Variance %</div>
+                <div class="kpi-value">${schedVarPct.toFixed(2)}%</div>
+                <div class="kpi-detail">${schedVarPct >= 0 ? '+' : ''}${schedVarPct.toFixed(2)} percentage points</div>
+            </div>
+        `;
+        document.getElementById('section2-kpis').innerHTML = kpi2Html;
 
-// Gauge bar
-document.getElementById('gaugeUsed').style.width = contPctUsed+'%';
-document.getElementById('gaugeUsed').textContent = fmtPct(contPctUsed);
-document.getElementById('gaugeUsedLabel').textContent = 'Used: '+fmtShort(contUsed);
-document.getElementById('gaugeRemainingLabel').textContent = 'Remaining: '+fmtShort(contRemaining);
+        // Chart 3: Planned vs Actual Cumulative
+        const ctx3 = document.getElementById('chart-schedule-cumulative').getContext('2d');
 
-// Burn-down chart — cumulative contingency used per pay app
-const burnLabels = [];
-const burnData = [];
-let cumUsed = 0;
-// Group contingency usage by pay app
-const usageByPA = {};
-contItems.forEach(item => {
-  // Handle split pay apps like "3/4" — attribute full amount to last listed
-  const pa = typeof item.payApp === 'string' ? parseInt(item.payApp.split('/').pop()) : item.payApp;
-  usageByPA[pa] = (usageByPA[pa]||0) + item.amount;
-});
-payApps.forEach(a => {
-  cumUsed += (usageByPA[a.num]||0);
-  burnLabels.push(a.period);
-  burnData.push(contBudget - cumUsed);
-});
+        // Build all labels (all 23 months)
+        const allLabels = plannedSchedule.map(p => p.month);
+        const plannedData = plannedSchedule.map(p => p.cumPlanned);
 
-new Chart(document.getElementById('contBurnChart').getContext('2d'), {
-  type:'line',
-  data:{
-    labels: burnLabels,
-    datasets:[
-      { label:'Remaining Budget', data:burnData, borderColor:'#2e7d32', backgroundColor:'rgba(46,125,50,0.12)', borderWidth:2.5, pointRadius:5, fill:true, tension:0.2 },
-      { label:'Total Budget', data:burnLabels.map(()=>contBudget), borderColor:'#bdbdbd', borderWidth:1.5, borderDash:[4,4], pointRadius:0, fill:false }
-    ]
-  },
-  options:{
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ tooltip:{ callbacks:{ label:ctx=>ctx.dataset.label+': '+fmt(ctx.parsed.y) }}, legend:{ position:'bottom', labels:{ usePointStyle:true, padding:12, font:{size:11} }}},
-    scales:{ y:{ beginAtZero:true, max:contBudget*1.05, ticks:{ callback:v=>'$'+(v/1e3).toFixed(0)+'K' }, grid:{ color:'#eef2f7' }}, x:{ grid:{ display:false }}}
-  }
-});
+        // Actual data - fill for months with data, null otherwise
+        const actualCompletedData = allLabels.map(label => {
+            for (let pa of payApps) {
+                if (pa.period === label) return pa.totalCompleted;
+            }
+            return null;
+        });
 
-// Contingency itemized table
-const contCols = ['CMGC #','RFC/RFI','Description','Amount','Initiated','Submitted','Pay App #','Billed','Notes'];
-let chtml = '<thead><tr>' + contCols.map(c=>`<th class="${['Amount','Billed'].includes(c)?'num':''}">${c}</th>`).join('') + '</tr></thead><tbody>';
-contItems.forEach(item => {
-  chtml += `<tr><td>${item.id}</td><td>${item.ref}</td><td style="white-space:normal;max-width:260px;">${item.desc}</td><td class="num">${fmt(item.amount)}</td><td>${item.initiated}</td><td>${item.submitted}</td><td class="pct">${item.payApp}</td><td class="num">${fmt(item.billed)}</td><td style="white-space:normal;font-size:11px;color:var(--muted);">${item.note||''}</td></tr>`;
-});
-chtml += `<tr style="font-weight:700;background:#eef2f7;"><td colspan="3">TOTALS (${contItems.length} items)</td><td class="num">${fmt(contUsed)}</td><td colspan="3"></td><td class="num">${fmt(contItems.reduce((s,i)=>s+i.billed,0))}</td><td></td></tr></tbody>`;
-document.getElementById('contTable').innerHTML = chtml;
+        const actualPaidData = allLabels.map(label => {
+            for (let pa of payApps) {
+                if (pa.period === label) return pa.earnedLessRetainage;
+            }
+            return null;
+        });
 
-document.getElementById('updateDate').textContent = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
-</script>
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: allLabels,
+                datasets: [
+                    {
+                        label: 'Planned (P6 Schedule)',
+                        data: plannedData,
+                        borderColor: '#9e9e9e',
+                        borderDash: [5, 5],
+                        backgroundColor: 'rgba(158, 158, 158, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#9e9e9e',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1,
+                        order: 2
+                    },
+                    {
+                        label: 'Actual Completed',
+                        data: actualCompletedData,
+                        borderColor: 'var(--accent)',
+                        backgroundColor: 'rgba(46, 125, 50, 0.15)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'var(--accent)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        spanGaps: true,
+                        order: 1
+                    },
+                    {
+                        label: 'Actual Paid (Less Ret.)',
+                        data: actualPaidData,
+                        borderColor: '#2196F3',
+                        borderDash: [5, 5],
+                        fill: false,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2196F3',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        spanGaps: true,
+                        order: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Planned vs. Actual — Cumulative $ Completed (S-Curve)',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => '$' + (value / 1000000).toFixed(1) + 'M' }
+                    }
+                }
+            }
+        });
+
+        // Chart 4: Planned vs Actual % Complete
+        const ctx4 = document.getElementById('chart-schedule-percent').getContext('2d');
+
+        const plannedPctData = plannedSchedule.map(p => ((p.cumPlanned / contractTotal) * 100));
+        const actualPctCompletedData = allLabels.map(label => {
+            for (let pa of payApps) {
+                if (pa.period === label) return ((pa.totalCompleted / contractTotal) * 100);
+            }
+            return null;
+        });
+
+        new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: allLabels,
+                datasets: [
+                    {
+                        label: 'Planned %',
+                        data: plannedPctData,
+                        borderColor: '#9e9e9e',
+                        borderDash: [5, 5],
+                        fill: false,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        pointRadius: 3,
+                        pointBackgroundColor: '#9e9e9e',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1
+                    },
+                    {
+                        label: 'Actual %',
+                        data: actualPctCompletedData,
+                        borderColor: 'var(--accent)',
+                        fill: false,
+                        borderWidth: 2.5,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'var(--accent)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Planned vs. Actual — % Complete',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { callback: value => value + '%' }
+                    }
+                }
+            }
+        });
+
+        // Populate Section 2 Table
+        const tableScheduleBody = document.querySelector('#table-schedule tbody');
+        payApps.forEach(pa => {
+            const plannedForMonth = plannedSchedule.find(p => p.month === pa.period);
+            const plannedDollars = plannedForMonth ? plannedForMonth.cumPlanned : 0;
+            const actualDollars = pa.totalCompleted;
+            const dollarVar = actualDollars - plannedDollars;
+            const plannedPctVal = ((plannedDollars / contractTotal) * 100);
+            const actualPctVal = ((actualDollars / contractTotal) * 100);
+            const pctVar = actualPctVal - plannedPctVal;
+            const status = actualDollars >= plannedDollars ? 'Ahead' : 'Behind';
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${pa.period}</td>
+                <td>${formatCurrency(plannedDollars)}</td>
+                <td>${formatCurrency(actualDollars)}</td>
+                <td><span class="currency ${dollarVar >= 0 ? 'green' : 'red'}">${formatCurrency(dollarVar)}</span></td>
+                <td>${plannedPctVal.toFixed(1)}%</td>
+                <td>${actualPctVal.toFixed(1)}%</td>
+                <td><span class="currency ${pctVar >= 0 ? 'green' : 'red'}">${pctVar >= 0 ? '+' : ''}${pctVar.toFixed(2)}%</span></td>
+                <td><span class="currency ${status === 'Ahead' ? 'green' : 'red'}">${status}</span></td>
+            `;
+            tableScheduleBody.appendChild(row);
+        });
+
+        // ========== SECTION 3: CONTRACTOR CONTINGENCY ==========
+        const contBudget = 804492.00;
+        const contItems = [
+            { id:"CMGC-001", ref:"RFC006", desc:"Water Permit - Temp Water Meter", amount:4262.00, initiated:"9/18/25", submitted:"10/24/25", payApp:2, billed:4262.00 },
+            { id:"CMGC-002", ref:"RFC008", desc:"1200C Erosion Control", amount:10488.00, initiated:"11/13/25", submitted:"12/22/25", payApp:4, billed:10488.00 },
+            { id:"CMGC-003", ref:"RFC009", desc:"Added DSM Per Field Conditions", amount:40081.00, initiated:"11/15/25", submitted:"11/24/25", payApp:"3/4", billed:40081.00, note:"$26,950 in PA#3 + $13,131 in PA#4" },
+            { id:"CMGC-004", ref:"RFC010", desc:"MEP BIM Coordination", amount:15000.00, initiated:"11/17/25", submitted:"11/24/25", payApp:4, billed:15000.00 },
+            { id:"CMGC-005", ref:"RFC042", desc:"PGE Temp Power", amount:43288.00, initiated:"1/14/26", submitted:"1/25/26", payApp:5, billed:43288.00 },
+            { id:"CMGC-006", ref:"RFC003", desc:"IFC Changes Early Subs", amount:53014.00, initiated:"12/9/25", submitted:"1/25/26", payApp:5, billed:53014.00 },
+            { id:"CMGC-007", ref:"RFC022", desc:"RFI#19 Panel Board Submittal Clarification", amount:1363.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1363.00 },
+            { id:"CMGC-008", ref:"RFC031", desc:"RFI#38 - NE Lobby Sewer Stack Location", amount:1690.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1690.00 },
+            { id:"CMGC-009", ref:"RFC024", desc:"RFI#30 Server Connection Invert Elevation Discrepancy", amount:1516.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1516.00 },
+            { id:"CMGC-010", ref:"RFC056", desc:"RFI#73 - CMU Joist Pocket", amount:1417.00, initiated:"2/24/26", submitted:"2/24/26", payApp:6, billed:1417.00 },
+            { id:"CMGC-011", ref:"RFC018", desc:"RFI#26 Fixed Bollard by Generator Enclosure", amount:224.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:224.00 }
+        ];
+
+        const totalBilled = contItems.reduce((sum, item) => sum + item.billed, 0);
+        const remaining = contBudget - totalBilled;
+        const pctUsed = (totalBilled / contBudget) * 100;
+
+        const kpi3Html = `
+            <div class="kpi-card">
+                <div class="kpi-label">Contingency Budget</div>
+                <div class="kpi-value">${formatCurrency(contBudget)}</div>
+                <div class="kpi-detail">Total authorized</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">Total Used</div>
+                <div class="kpi-value">${formatCurrency(totalBilled)}</div>
+                <div class="kpi-detail">${pctUsed.toFixed(1)}% of budget</div>
+            </div>
+            <div class="kpi-card green">
+                <div class="kpi-label">Remaining</div>
+                <div class="kpi-value">${formatCurrency(remaining)}</div>
+                <div class="kpi-detail">${(100 - pctUsed).toFixed(1)}% available</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Billed</div>
+                <div class="kpi-value">${formatCurrency(totalBilled)}</div>
+                <div class="kpi-detail">${contItems.length} items</div>
+            </div>
+        `;
+        document.getElementById('section3-kpis').innerHTML = kpi3Html;
+
+        // Gauge bar for contingency
+        const gaugeHtml = `
+            <div class="gauge-label">
+                <span>Contingency Usage</span>
+                <span>${pctUsed.toFixed(1)}%</span>
+            </div>
+            <div class="gauge-bar">
+                <div class="gauge-fill" style="width: ${pctUsed}%">
+                    ${pctUsed > 10 ? pctUsed.toFixed(1) + '%' : ''}
+                </div>
+            </div>
+        `;
+        document.getElementById('contingency-gauge').innerHTML = gaugeHtml;
+
+        // Contingency by pay app
+        const contingencyByPayApp = {};
+        contItems.forEach(item => {
+            const payAppStr = String(item.payApp);
+            const payAppNums = payAppStr.includes('/') ? payAppStr.split('/').map(p => parseInt(p.trim())) : [parseInt(payAppStr)];
+            payAppNums.forEach(num => {
+                if (!contingencyByPayApp[num]) contingencyByPayApp[num] = 0;
+                contingencyByPayApp[num] += item.billed;
+            });
+        });
+
+        // Chart 5: Contingency Burndown
+        const ctx5 = document.getElementById('chart-contingency-burndown').getContext('2d');
+        const burndownLabels = payApps.map(pa => pa.period);
+        const burndownData = payApps.map(pa => {
+            let sum = 0;
+            contItems.forEach(item => {
+                const payAppStr = String(item.payApp);
+                const payAppNums = payAppStr.includes('/') ? payAppStr.split('/').map(p => parseInt(p.trim())) : [parseInt(payAppStr)];
+                if (payAppNums.some(num => num <= pa.num)) {
+                    sum += item.billed;
+                }
+            });
+            return contBudget - sum;
+        });
+
+        new Chart(ctx5, {
+            type: 'line',
+            data: {
+                labels: burndownLabels,
+                datasets: [
+                    {
+                        label: 'Remaining Contingency',
+                        data: burndownData,
+                        borderColor: 'var(--accent)',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: 'var(--accent)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Total Budget',
+                        data: Array(payApps.length).fill(contBudget),
+                        borderColor: '#9e9e9e',
+                        borderDash: [5, 5],
+                        fill: false,
+                        borderWidth: 1.5,
+                        tension: 0.4,
+                        pointRadius: 2,
+                        pointBackgroundColor: '#9e9e9e',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Contingency Burn-Down by Pay App',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => '$' + (value / 1000).toFixed(0) + 'K' }
+                    }
+                }
+            }
+        });
+
+        // Populate Section 3 Table
+        const tableContBody = document.querySelector('#table-contingency tbody');
+        contItems.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.ref}</td>
+                <td>${item.desc}</td>
+                <td>${formatCurrency(item.amount)}</td>
+                <td>${item.initiated}</td>
+                <td>${item.submitted}</td>
+                <td>${item.payApp}</td>
+                <td>${formatCurrency(item.billed)}</td>
+                <td>${item.note || ''}</td>
+            `;
+            tableContBody.appendChild(row);
+        });
+
+        // Add totals row to contingency table
+        const contTotalsRow = document.createElement('tr');
+        contTotalsRow.className = 'totals-row';
+        contTotalsRow.innerHTML = `
+            <td colspan="3"><strong>TOTALS</strong></td>
+            <td>${formatCurrency(contItems.reduce((sum, item) => sum + item.amount, 0))}</td>
+            <td colspan="2"></td>
+            <td></td>
+            <td>${formatCurrency(totalBilled)}</td>
+            <td></td>
+        `;
+        tableContBody.appendChild(contTotalsRow);
+
+        // ========== SECTION 4: RFC COST RISK ==========
+        const rfcApproved = [
+            { num:"003", desc:"IFC Changes Group #1 Rev3", amount:790265, date:"1/16/2026" },
+            { num:"007", desc:"IFC Changes Group #2 Rev2", amount:141473, date:"12/12/2025" },
+            { num:"021", desc:"Bulletin #1", amount:116321, date:"1/7/2026" }
+        ];
+        const rfcInReview = [
+            { num:"023", desc:"ASI#1", amount:6008, date:"1/28/2026" },
+            { num:"025", desc:"IFC-RFI#39 PBOT Tree Grate", amount:82808, date:"12/18/2025" },
+            { num:"035", desc:"RFI#44 Lobby Vestibule Floor Box Change", amount:2117, date:"1/21/2026" },
+            { num:"041", desc:"RFI#53 Steel Coordination RFI Questions", amount:3309, date:"2/16/2026" },
+            { num:"046", desc:"RFI#60 WH-8 Change", amount:2529, date:"1/27/2026" },
+            { num:"047", desc:"RFI#66 Zone 1 & 2 Steel Followup", amount:7610, date:"2/16/2026" },
+            { num:"050", desc:"PGE Design Changes Added Primary", amount:32148, date:"2/3/2026" },
+            { num:"054", desc:"DCI Shotcrete Permit Revision", amount:3150, date:"2/12/2026" },
+            { num:"055", desc:"RFI#54 Stormwater Canopy Steel", amount:2548, date:"2/16/2026" },
+            { num:"059", desc:"Contaminated Soils Haul Off #5", amount:13727, date:"1/19/2026" },
+            { num:"073", desc:"RFI#98 Kitchen 210 Wall Type", amount:18647, date:"2/24/2026" },
+            { num:"075", desc:"RFI#103 AHU 1 & 2 Power Exhaust", amount:1210, date:"3/17/2026" },
+            { num:"087", desc:"RFI#121 Dryer Vent Clarifications", amount:4500, date:"3/17/2026" }
+        ];
+        const rfcInRevision = [
+            { num:"036", desc:"RFI#45 CMU Control Joints", amount:6685, date:"1/5/2026" },
+            { num:"044", desc:"RFI#36 Plumbing Penetrations & Rebar", amount:29470, date:"1/22/2026" },
+            { num:"051", desc:"RFI#24 Wall Type Under Stair 8", amount:15807, date:"1/22/2026" }
+        ];
+
+        const approvedTotal = rfcApproved.reduce((sum, item) => sum + item.amount, 0);
+        const reviewTotal = rfcInReview.reduce((sum, item) => sum + item.amount, 0);
+        const revisionTotal = rfcInRevision.reduce((sum, item) => sum + item.amount, 0);
+        const totalExposure = reviewTotal + revisionTotal;
+
+        const kpi4Html = `
+            <div class="kpi-card green">
+                <div class="kpi-label">Approved Change Orders</div>
+                <div class="kpi-value">${formatCurrency(approvedTotal)}</div>
+                <div class="kpi-detail">${rfcApproved.length} RFCs incorporated</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">In Review</div>
+                <div class="kpi-value">${formatCurrency(reviewTotal)}</div>
+                <div class="kpi-detail">${rfcInReview.length} RFCs pending</div>
+            </div>
+            <div class="kpi-card orange">
+                <div class="kpi-label">In Revision</div>
+                <div class="kpi-value">${formatCurrency(revisionTotal)}</div>
+                <div class="kpi-detail">${rfcInRevision.length} RFCs at risk</div>
+            </div>
+            <div class="kpi-card red">
+                <div class="kpi-label">Total Exposure</div>
+                <div class="kpi-value">${formatCurrency(totalExposure)}</div>
+                <div class="kpi-detail">Review + Revision at risk</div>
+            </div>
+        `;
+        document.getElementById('section4-kpis').innerHTML = kpi4Html;
+
+        // Chart 6: RFC Status by Cost (Horizontal Stacked Bar)
+        const ctx6 = document.getElementById('chart-rfc-status').getContext('2d');
+
+        new Chart(ctx6, {
+            type: 'bar',
+            data: {
+                labels: ['RFC Cost Status'],
+                datasets: [
+                    {
+                        label: 'Approved',
+                        data: [approvedTotal],
+                        backgroundColor: 'var(--accent)',
+                        borderColor: 'var(--accent)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'In Review',
+                        data: [reviewTotal],
+                        backgroundColor: 'var(--warn)',
+                        borderColor: 'var(--warn)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'In Revision',
+                        data: [revisionTotal],
+                        backgroundColor: '#c62828',
+                        borderColor: '#c62828',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'RFC Status by Cost',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { callback: value => '$' + (value / 1000000).toFixed(1) + 'M' }
+                    },
+                    y: {
+                        stacked: true
+                    }
+                }
+            }
+        });
+
+        // Chart 7: RFC Exposure Breakdown (Doughnut)
+        const ctx7 = document.getElementById('chart-rfc-exposure').getContext('2d');
+
+        new Chart(ctx7, {
+            type: 'doughnut',
+            data: {
+                labels: ['Approved', 'In Review', 'In Revision'],
+                datasets: [{
+                    data: [approvedTotal, reviewTotal, revisionTotal],
+                    backgroundColor: ['var(--accent)', 'var(--warn)', '#c62828'],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Cost Exposure Breakdown',
+                        font: { size: 14, weight: 600 },
+                        padding: 15
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return formatCurrency(context.parsed);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Populate RFC tables
+        // Approved RFCs
+        const tableRFCApprovedBody = document.querySelector('#table-rfc-approved tbody');
+        rfcApproved.forEach(rfc => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${rfc.num}</td>
+                <td>${rfc.desc}</td>
+                <td>${formatCurrency(rfc.amount)}</td>
+                <td>${rfc.date}</td>
+            `;
+            tableRFCApprovedBody.appendChild(row);
+        });
+
+        const approvedTotalsRow = document.createElement('tr');
+        approvedTotalsRow.className = 'totals-row';
+        approvedTotalsRow.innerHTML = `
+            <td colspan="2"><strong>TOTALS</strong></td>
+            <td>${formatCurrency(approvedTotal)}</td>
+            <td></td>
+        `;
+        tableRFCApprovedBody.appendChild(approvedTotalsRow);
+
+        // In Review RFCs
+        const tableRFCReviewBody = document.querySelector('#table-rfc-review tbody');
+        rfcInReview.forEach(rfc => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${rfc.num}</td>
+                <td>${rfc.desc}</td>
+                <td>${formatCurrency(rfc.amount)}</td>
+                <td>${rfc.date}</td>
+            `;
+            tableRFCReviewBody.appendChild(row);
+        });
+
+        const reviewTotalsRow = document.createElement('tr');
+        reviewTotalsRow.className = 'totals-row';
+        reviewTotalsRow.innerHTML = `
+            <td colspan="2"><strong>TOTALS</strong></td>
+            <td>${formatCurrency(reviewTotal)}</td>
+            <td></td>
+        `;
+        tableRFCReviewBody.appendChild(reviewTotalsRow);
+
+        // In Revision RFCs
+        const tableRFCRevisionBody = document.querySelector('#table-rfc-revision tbody');
+        rfcInRevision.forEach(rfc => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${rfc.num}</td>
+                <td>${rfc.desc}</td>
+                <td>${formatCurrency(rfc.amount)}</td>
+                <td>${rfc.date}</td>
+            `;
+            tableRFCRevisionBody.appendChild(row);
+        });
+
+        const revisionTotalsRow = document.createElement('tr');
+        revisionTotalsRow.className = 'totals-row';
+        revisionTotalsRow.innerHTML = `
+            <td colspan="2"><strong>TOTALS</strong></td>
+            <td>${formatCurrency(revisionTotal)}</td>
+            <td></td>
+        `;
+        tableRFCRevisionBody.appendChild(revisionTotalsRow);
+    </script>
 </body>
 </html>
