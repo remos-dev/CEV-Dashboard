@@ -425,6 +425,7 @@
                 <table id="table-rfc-approved">
                     <thead>
                         <tr>
+                            <th>CO #</th>
                             <th>RFC #</th>
                             <th>Description</th>
                             <th>Amount</th>
@@ -549,14 +550,7 @@
 
         // Populate Section 1 Table
         const tableBody = document.querySelector('#table-pay-apps tbody');
-        let totalRow = {
-            contractToDate: 0,
-            changeOrders: 0,
-            totalCompleted: 0,
-            retainage: 0,
-            earnedLessRetainage: 0,
-            currentPayment: 0
-        };
+        let sumCurrentPayment = 0;
 
         payApps.forEach(pa => {
             const row = document.createElement('tr');
@@ -573,27 +567,22 @@
                 <td>${pct}%</td>
             `;
             tableBody.appendChild(row);
-
-            totalRow.contractToDate += pa.contractToDate;
-            totalRow.changeOrders += pa.changeOrders;
-            totalRow.totalCompleted += pa.totalCompleted;
-            totalRow.retainage += pa.retainage;
-            totalRow.earnedLessRetainage += pa.earnedLessRetainage;
-            totalRow.currentPayment += pa.currentPayment;
+            sumCurrentPayment += pa.currentPayment;
         });
 
-        // Add totals row
+        // Add totals row — most columns are cumulative so use latest pay app values;
+        // only Current Payment is summed since it's the per-period amount
         const totalsRow = document.createElement('tr');
         totalsRow.className = 'totals-row';
-        const finalPct = ((totalRow.totalCompleted / totalRow.contractToDate) * 100).toFixed(1);
+        const finalPct = ((latestPayApp.totalCompleted / latestPayApp.contractToDate) * 100).toFixed(1);
         totalsRow.innerHTML = `
             <td colspan="2"><strong>TOTALS</strong></td>
-            <td>${formatCurrency(totalRow.contractToDate)}</td>
-            <td>${formatCurrency(totalRow.changeOrders)}</td>
-            <td>${formatCurrency(totalRow.totalCompleted)}</td>
-            <td>${formatCurrency(totalRow.retainage)}</td>
-            <td>${formatCurrency(totalRow.earnedLessRetainage)}</td>
-            <td>${formatCurrency(totalRow.currentPayment)}</td>
+            <td>${formatCurrency(latestPayApp.contractToDate)}</td>
+            <td>${formatCurrency(latestPayApp.changeOrders)}</td>
+            <td>${formatCurrency(latestPayApp.totalCompleted)}</td>
+            <td>${formatCurrency(latestPayApp.retainage)}</td>
+            <td>${formatCurrency(latestPayApp.earnedLessRetainage)}</td>
+            <td>${formatCurrency(sumCurrentPayment)}</td>
             <td>${finalPct}%</td>
         `;
         tableBody.appendChild(totalsRow);
@@ -1149,11 +1138,32 @@
         tableContBody.appendChild(contTotalsRow);
 
         // ========== SECTION 4: RFC COST RISK ==========
-        const rfcApproved = [
-            { num:"003", desc:"IFC Changes Group #1 Rev3", amount:790265, date:"1/16/2026" },
-            { num:"007", desc:"IFC Changes Group #2 Rev2", amount:141473, date:"12/12/2025" },
-            { num:"021", desc:"Bulletin #1", amount:116321, date:"1/7/2026" }
+        // Approved RFCs mapped to Owner Change Orders from CO Billing Log
+        const changeOrders = [
+            { co:"OCO#1", rfcs:[
+                { num:"001", desc:"ODOT Lease", amount:46546, date:"10/29/2025" },
+                { num:"002", desc:"Date of Commencement", amount:0, date:"10/29/2025" },
+                { num:"004", desc:"Concrete Excavation Overage - Allowance", amount:6813, date:"10/29/2025" },
+                { num:"005", desc:"Contaminated Soils Haul Off #1", amount:459606, date:"10/29/2025" }
+            ]},
+            { co:"OCO#2", rfcs:[
+                { num:"020", desc:"Contaminated Soils Haul Off #2", amount:353934, date:"11/30/2025" }
+            ]},
+            { co:"OCO#3", rfcs:[
+                { num:"026", desc:"Contaminated Soils Haul Off #3", amount:159972, date:"12/18/2025" }
+            ]},
+            { co:"OCO#4", rfcs:[
+                { num:"003", desc:"IFC Changes Early Subs", amount:790265, date:"1/20/2026" },
+                { num:"007", desc:"IFC Change Sub Group #2", amount:141473, date:"1/23/2026" }
+            ]},
+            { co:"OCO#5", rfcs:[
+                { num:"021", desc:"Bulletin #1", amount:116321, date:"1/20/2026" }
+            ]},
+            { co:"OCO#6", rfcs:[
+                { num:"049", desc:"Contaminated Soils #4", amount:13382, date:"1/23/2026" }
+            ]}
         ];
+        const rfcApproved = changeOrders.flatMap(co => co.rfcs.map(r => ({...r, co: co.co})));
         const rfcInReview = [
             { num:"023", desc:"ASI#1", amount:6008, date:"1/28/2026" },
             { num:"025", desc:"IFC-RFI#39 PBOT Tree Grate", amount:82808, date:"12/18/2025" },
@@ -1184,7 +1194,7 @@
             <div class="kpi-card green">
                 <div class="kpi-label">Approved Change Orders</div>
                 <div class="kpi-value">${formatCurrency(approvedTotal)}</div>
-                <div class="kpi-detail">${rfcApproved.length} RFCs incorporated</div>
+                <div class="kpi-detail">${changeOrders.length} COs / ${rfcApproved.length} RFCs incorporated</div>
             </div>
             <div class="kpi-card yellow">
                 <div class="kpi-label">In Review</div>
@@ -1204,33 +1214,37 @@
         `;
         document.getElementById('section4-kpis').innerHTML = kpi4Html;
 
-        // Chart 6: RFC Status by Cost (Horizontal Stacked Bar)
+        // Chart 6: RFC Status by Cost (Horizontal Stacked Bar) — broken out by Change Order
         const ctx6 = document.getElementById('chart-rfc-status').getContext('2d');
+
+        // Green shades for each OCO
+        const coColors = ['#1b8c1b','#22a522','#3ec43e','#6dd86d','#9ae89a','#c4f4c4'];
+        const coDatasets = changeOrders.map((co, i) => ({
+            label: co.co + ' ($' + (co.rfcs.reduce((s,r)=>s+r.amount,0)/1000).toFixed(0) + 'k)',
+            data: [co.rfcs.reduce((s,r)=>s+r.amount, 0)],
+            backgroundColor: coColors[i] || coColors[0],
+            borderColor: '#fff',
+            borderWidth: 1
+        }));
 
         new Chart(ctx6, {
             type: 'bar',
             data: {
                 labels: ['RFC Cost Status'],
                 datasets: [
+                    ...coDatasets,
                     {
-                        label: 'Approved',
-                        data: [approvedTotal],
-                        backgroundColor: '#22a522',
-                        borderColor: '#1b8c1b',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'In Review',
+                        label: 'In Review ($' + (reviewTotal/1000).toFixed(0) + 'k)',
                         data: [reviewTotal],
                         backgroundColor: '#f5c400',
-                        borderColor: '#c9a200',
+                        borderColor: '#fff',
                         borderWidth: 1
                     },
                     {
-                        label: 'In Revision',
+                        label: 'In Revision ($' + (revisionTotal/1000).toFixed(0) + 'k)',
                         data: [revisionTotal],
                         backgroundColor: '#e01010',
-                        borderColor: '#b80000',
+                        borderColor: '#fff',
                         borderWidth: 1
                     }
                 ]
@@ -1242,19 +1256,24 @@
                 plugins: {
                     legend: {
                         position: 'top',
-                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                        labels: { usePointStyle: true, padding: 10, font: { size: 11 } }
                     },
                     title: {
                         display: true,
-                        text: 'RFC Status by Cost',
+                        text: 'RFC Status by Cost (by Change Order)',
                         font: { size: 14, weight: 600 },
                         padding: 15
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => ctx.dataset.label + ': ' + formatCurrency(ctx.parsed.x)
+                        }
                     }
                 },
                 scales: {
                     x: {
                         stacked: true,
-                        ticks: { callback: value => '$' + (value / 1000000).toFixed(1) + 'M' }
+                        ticks: { callback: value => '$' + (value >= 1000000 ? (value/1000000).toFixed(1)+'M' : (value/1000).toFixed(0)+'k') }
                     },
                     y: {
                         stacked: true
@@ -1263,16 +1282,22 @@
             }
         });
 
-        // Chart 7: RFC Exposure Breakdown (Doughnut)
+        // Chart 7: Cost Exposure Breakdown (Doughnut) — each CO + Review + Revision
         const ctx7 = document.getElementById('chart-rfc-exposure').getContext('2d');
+
+        const doughnutLabels = changeOrders.map(co => co.co);
+        doughnutLabels.push('In Review', 'In Revision');
+        const doughnutData = changeOrders.map(co => co.rfcs.reduce((s,r)=>s+r.amount,0));
+        doughnutData.push(reviewTotal, revisionTotal);
+        const doughnutColors = [...coColors.slice(0, changeOrders.length), '#f5c400', '#e01010'];
 
         new Chart(ctx7, {
             type: 'doughnut',
             data: {
-                labels: ['Approved', 'In Review', 'In Revision'],
+                labels: doughnutLabels,
                 datasets: [{
-                    data: [approvedTotal, reviewTotal, revisionTotal],
-                    backgroundColor: ['#22a522', '#f5c400', '#e01010'],
+                    data: doughnutData,
+                    backgroundColor: doughnutColors,
                     borderColor: '#fff',
                     borderWidth: 2
                 }]
@@ -1283,18 +1308,20 @@
                 plugins: {
                     legend: {
                         position: 'bottom',
-                        labels: { usePointStyle: true, padding: 15, font: { size: 12 } }
+                        labels: { usePointStyle: true, padding: 10, font: { size: 11 } }
                     },
                     title: {
                         display: true,
-                        text: 'Cost Exposure Breakdown',
+                        text: 'Cost Exposure Breakdown (by Change Order)',
                         font: { size: 14, weight: 600 },
                         padding: 15
                     },
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return formatCurrency(context.parsed);
+                                const total = context.dataset.data.reduce((a,b)=>a+b,0);
+                                const pct = ((context.parsed / total)*100).toFixed(1);
+                                return context.label + ': ' + formatCurrency(context.parsed) + ' (' + pct + '%)';
                             }
                         }
                     }
@@ -1303,23 +1330,37 @@
         });
 
         // Populate RFC tables
-        // Approved RFCs
+        // Approved RFCs — grouped by Change Order
         const tableRFCApprovedBody = document.querySelector('#table-rfc-approved tbody');
-        rfcApproved.forEach(rfc => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${rfc.num}</td>
-                <td>${rfc.desc}</td>
-                <td>${formatCurrency(rfc.amount)}</td>
-                <td>${rfc.date}</td>
+        changeOrders.forEach(co => {
+            const coTotal = co.rfcs.reduce((s,r) => s + r.amount, 0);
+            co.rfcs.forEach((rfc, idx) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-weight:${idx===0?'600':'400'}; color:#1b8c1b;">${idx===0 ? co.co : ''}</td>
+                    <td>${rfc.num}</td>
+                    <td>${rfc.desc}</td>
+                    <td>${formatCurrency(rfc.amount)}</td>
+                    <td>${rfc.date}</td>
+                `;
+                tableRFCApprovedBody.appendChild(row);
+            });
+            // CO subtotal row
+            const subRow = document.createElement('tr');
+            subRow.style.backgroundColor = '#f0f9f0';
+            subRow.style.fontWeight = '600';
+            subRow.innerHTML = `
+                <td colspan="3" style="text-align:right; color:#1b8c1b;">${co.co} Subtotal (${co.rfcs.length} RFCs)</td>
+                <td>${formatCurrency(coTotal)}</td>
+                <td></td>
             `;
-            tableRFCApprovedBody.appendChild(row);
+            tableRFCApprovedBody.appendChild(subRow);
         });
 
         const approvedTotalsRow = document.createElement('tr');
         approvedTotalsRow.className = 'totals-row';
         approvedTotalsRow.innerHTML = `
-            <td colspan="2"><strong>TOTALS</strong></td>
+            <td colspan="3"><strong>GRAND TOTAL (${changeOrders.length} Change Orders / ${rfcApproved.length} RFCs)</strong></td>
             <td>${formatCurrency(approvedTotal)}</td>
             <td></td>
         `;
