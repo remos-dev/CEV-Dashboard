@@ -471,7 +471,7 @@
     </div>
 
     <footer>
-        Auto-generated dashboard — Last updated March 17, 2026
+        Auto-generated dashboard — Last updated March 30, 2026
     </footer>
 
     <script>
@@ -500,7 +500,8 @@
             { num:3, period:"Nov 2025", originalContract:43011259, changeOrders:866899, contractToDate:43878158, totalCompleted:4317062.46, retainage:215853.12, earnedLessRetainage:4101209.34, prevCertificates:2188122.14, currentPayment:1913087.20 },
             { num:4, period:"Dec 2025", originalContract:43011259, changeOrders:1026871, contractToDate:44038130, totalCompleted:5825247.46, retainage:291262.37, earnedLessRetainage:5533985.09, prevCertificates:4101209.34, currentPayment:1432775.75 },
             { num:5, period:"Jan 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:7593909.46, retainage:379695.47, earnedLessRetainage:7214213.99, prevCertificates:5533985.09, currentPayment:1680228.90 },
-            { num:6, period:"Feb 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:12104372.46, retainage:560986.77, earnedLessRetainage:11543385.69, prevCertificates:7214213.99, currentPayment:4329171.70 }
+            { num:6, period:"Feb 2026", originalContract:43011259, changeOrders:2088312, contractToDate:45099571, totalCompleted:12104372.46, retainage:560986.77, earnedLessRetainage:11543385.69, prevCertificates:7214213.99, currentPayment:4329171.70 },
+            { num:7, period:"Mar 2026", originalContract:43011259, changeOrders:2113066, contractToDate:45124325, totalCompleted:13495870.77, retainage:674793.54, earnedLessRetainage:12821077.23, prevCertificates:11543385.69, currentPayment:1277691.54 }
         ];
 
         // Calculate Section 1 KPIs
@@ -731,7 +732,7 @@
             { month:"Jul 2027", cumPlanned:45099571.00 }
         ];
 
-        const contractTotal = 45099571.00;
+        const contractTotal = 45124325.00;
 
         // Build actual data (only 6 months with pay apps)
         const actualByMonth = {};
@@ -743,16 +744,18 @@
         });
 
         // Calculate Schedule KPIs
-        const plannedPct = (plannedSchedule[5].cumPlanned / contractTotal) * 100;
+        // Use latest pay app period to find matching planned value
+        const latestPlannedIdx = plannedSchedule.findIndex(p => p.month === latestPayApp.period);
+        const plannedPct = (plannedSchedule[latestPlannedIdx].cumPlanned / contractTotal) * 100;
         const actualPct = (latestPayApp.totalCompleted / contractTotal) * 100;
-        const schedVarDollars = latestPayApp.totalCompleted - plannedSchedule[5].cumPlanned;
+        const schedVarDollars = latestPayApp.totalCompleted - plannedSchedule[latestPlannedIdx].cumPlanned;
         const schedVarPct = actualPct - plannedPct;
 
         const kpi2Html = `
             <div class="kpi-card">
                 <div class="kpi-label">Planned % Complete</div>
                 <div class="kpi-value">${plannedPct.toFixed(1)}%</div>
-                <div class="kpi-detail">Per P6 Schedule (Feb 2026)</div>
+                <div class="kpi-detail">Per P6 Schedule (03/24/26)</div>
             </div>
             <div class="kpi-card green">
                 <div class="kpi-label">Actual % Complete</div>
@@ -978,7 +981,12 @@
             { id:"CMGC-008", ref:"RFC031", desc:"RFI#38 - NE Lobby Sewer Stack Location", amount:1690.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1690.00 },
             { id:"CMGC-009", ref:"RFC024", desc:"RFI#30 Server Connection Invert Elevation Discrepancy", amount:1516.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:1516.00 },
             { id:"CMGC-010", ref:"RFC056", desc:"RFI#73 - CMU Joist Pocket", amount:1417.00, initiated:"2/24/26", submitted:"2/24/26", payApp:6, billed:1417.00 },
-            { id:"CMGC-011", ref:"RFC018", desc:"RFI#26 Fixed Bollard by Generator Enclosure", amount:224.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:224.00 }
+            { id:"CMGC-011", ref:"RFC018", desc:"RFI#26 Fixed Bollard by Generator Enclosure", amount:224.00, initiated:"1/23/26", submitted:"2/24/26", payApp:6, billed:224.00 },
+            { id:"CMGC-012", ref:"RFC019", desc:"RFI#28 Loading Dock Chamfer", amount:1631.00, initiated:"11/13/25", submitted:"3/24/26", payApp:7, billed:1631.00 },
+            { id:"CMGC-013", ref:"RFC052", desc:"5 Day Schedule Credit", amount:11482.00, initiated:"12/1/25", submitted:"—", payApp:"—", billed:0, note:"Booked credit — not yet billed" },
+            { id:"CMGC-014", ref:"RFC054", desc:"Shotcrete Design Reimbursement", amount:3150.00, initiated:"2/5/26", submitted:"2/24/26", payApp:7, billed:3150.00 },
+            { id:"CMGC-015", ref:"RFC023R1", desc:"ASI#1 PGE LECA", amount:257.00, initiated:"1/26/26", submitted:"2/24/26", payApp:7, billed:257.00 },
+            { id:"CMGC-016", ref:"RFC035", desc:"RFI#44 Floor Box Located at Lobby", amount:2117.00, initiated:"12/12/25", submitted:"1/21/26", payApp:7, billed:2117.00 }
         ];
 
         const totalBilled = contItems.reduce((sum, item) => sum + item.billed, 0);
@@ -1161,40 +1169,57 @@
             ]},
             { co:"OCO#6", rfcs:[
                 { num:"049", desc:"Contaminated Soils #4", amount:13382, date:"1/23/2026" }
+            ]},
+            { co:"OCO#7", rfcs:[
+                { num:"023", desc:"ASI#1", amount:6008, date:"3/17/2026" },
+                { num:"035", desc:"RFI#44 Floor Box @ Lobby Vestibule", amount:-2117, date:"3/17/2026" },
+                { num:"041", desc:"RFI#53 Steel Coordination RFI", amount:3309, date:"3/17/2026" },
+                { num:"046", desc:"RFI#60 Alternative Water Heater", amount:2529, date:"3/17/2026" },
+                { num:"047", desc:"RFI#66 Zone 1 & 2 Follow Up", amount:7610, date:"3/17/2026" },
+                { num:"054", desc:"DCI Shotcrete — Contingency Allocation ($3,150)", amount:-3150, date:"3/17/2026" },
+                { num:"055", desc:"RFI#54 Stormwater Canopy Steel", amount:2548, date:"3/17/2026" },
+                { num:"059", desc:"Contaminated Soils #5", amount:13727, date:"3/17/2026" },
+                { num:"075", desc:"RFI#103 AHU-1 & 2 Powered Exhaust", amount:-1210, date:"3/17/2026" },
+                { num:"087", desc:"RFI#121 Dryer Vent Clarifications", amount:-4500, date:"3/17/2026" }
             ]}
         ];
         const rfcApproved = changeOrders.flatMap(co => co.rfcs.map(r => ({...r, co: co.co})));
         const rfcInReview = [
-            { num:"023", desc:"ASI#1", amount:6008, date:"1/28/2026" },
-            { num:"025", desc:"IFC-RFI#39 PBOT Tree Grate", amount:82808, date:"12/18/2025" },
-            { num:"035", desc:"RFI#44 Lobby Vestibule Floor Box Change", amount:-2117, date:"1/21/2026", credit:true },
-            { num:"041", desc:"RFI#53 Steel Coordination RFI Questions", amount:3309, date:"2/16/2026" },
-            { num:"046", desc:"RFI#60 WH-8 Change", amount:2529, date:"1/27/2026" },
-            { num:"047", desc:"RFI#66 Zone 1 & 2 Steel Followup", amount:7610, date:"2/16/2026" },
-            { num:"050", desc:"PGE Design Changes Added Primary", amount:32148, date:"2/3/2026" },
-            { num:"054", desc:"DCI Shotcrete Permit Revision", amount:-3150, date:"2/12/2026", credit:true },
-            { num:"055", desc:"RFI#54 Stormwater Canopy Steel", amount:2548, date:"2/16/2026" },
-            { num:"059", desc:"Contaminated Soils Haul Off #5", amount:13727, date:"1/19/2026" },
+            { num:"013", desc:"RFI#6 Elevator Pit Discrepancy", amount:2618, date:"10/15/2025" },
+            { num:"025", desc:"RFI#39 PBOT Tree Grate", amount:82808, date:"12/19/2025" },
+            { num:"036R1", desc:"RFI#45 CMU Control Joints (Revised)", amount:3693, date:"1/16/2026" },
+            { num:"043", desc:"Concrete Shop Drawing Comments", amount:9676, date:"11/7/2025" },
+            { num:"044", desc:"RFI#36 Plumbing Penetrations & Rebar", amount:29470, date:"11/26/2025" },
+            { num:"048", desc:"Structural Steel Acceleration", amount:86749, date:"1/21/2026" },
+            { num:"050", desc:"PGE Design Changes", amount:32148, date:"1/22/2026" },
+            { num:"052R1", desc:"5 Day Schedule Credit", amount:-18497, date:"12/1/2025", credit:true },
+            { num:"064", desc:"RFI#80/80.1 Level 1 Mech Grille", amount:3934, date:"3/17/2026" },
             { num:"073", desc:"RFI#98 Kitchen 210 Wall Type", amount:18647, date:"2/24/2026" },
-            { num:"075", desc:"RFI#103 AHU 1 & 2 Power Exhaust", amount:-1210, date:"3/17/2026", credit:true },
-            { num:"087", desc:"RFI#121 Dryer Vent Clarifications", amount:-4500, date:"3/17/2026", credit:true }
+            { num:"077", desc:"Elevator Steel Changes", amount:12000, date:"2/13/2026", rom:true },
+            { num:"083", desc:"RFI#112 MEP Steel Support at Roof", amount:201347, date:"2/16/2026", rom:true },
+            { num:"088", desc:"RFI#99 Acoustic Wall Panel", amount:16366, date:"2/24/2026" },
+            { num:"061", desc:"RFI#74 Gas Meter Relocate", amount:null, date:"1/20/2026", pendingEstimate:true },
+            { num:"070", desc:"RFI#92/97 Door Frame Expedite", amount:null, date:"1/30/2026", pendingEstimate:true },
+            { num:"090", desc:"RFI#144 Storefront Low E Change", amount:null, date:"2/27/2026", pendingEstimate:true },
+            { num:"091", desc:"Wind Delays", amount:null, date:"3/24/2026", pendingEstimate:true }
         ];
         const rfcInRevision = [
-            { num:"036", desc:"RFI#45 CMU Control Joints", amount:6685, date:"1/5/2026" },
-            { num:"044", desc:"RFI#36 Plumbing Penetrations & Rebar", amount:29470, date:"1/22/2026" },
             { num:"051", desc:"RFI#24 Wall Type Under Stair 8", amount:15807, date:"1/22/2026" }
         ];
 
         const approvedTotal = rfcApproved.reduce((sum, item) => sum + item.amount, 0);
-        const reviewTotal = rfcInReview.reduce((sum, item) => sum + item.amount, 0);
+        const reviewTotal = rfcInReview.filter(r => !r.pendingEstimate).reduce((sum, item) => sum + item.amount, 0);
         const revisionTotal = rfcInRevision.reduce((sum, item) => sum + item.amount, 0);
         const totalExposure = reviewTotal + revisionTotal;
 
-        // Credit/charge breakdown for In Review RFCs
-        const creditCount = rfcInReview.filter(r => r.credit).length;
-        const chargeCount = rfcInReview.length - creditCount;
-        const chargeTotal = rfcInReview.filter(r => !r.credit).reduce((s,r) => s + r.amount, 0);
-        const creditTotal = rfcInReview.filter(r => r.credit).reduce((s,r) => s + r.amount, 0);
+        // Credit/charge breakdown for In Review RFCs (exclude pending-estimate items from totals)
+        const pricedReview = rfcInReview.filter(r => !r.pendingEstimate);
+        const pendingEstCount = rfcInReview.filter(r => r.pendingEstimate).length;
+        const romCount = rfcInReview.filter(r => r.rom).length;
+        const creditCount = pricedReview.filter(r => r.credit).length;
+        const chargeCount = pricedReview.length - creditCount;
+        const chargeTotal = pricedReview.filter(r => !r.credit).reduce((s,r) => s + r.amount, 0);
+        const creditTotal = pricedReview.filter(r => r.credit).reduce((s,r) => s + r.amount, 0);
 
         const kpi4Html = `
             <div class="kpi-card green">
@@ -1205,7 +1230,7 @@
             <div class="kpi-card yellow">
                 <div class="kpi-label">In Review (Net)</div>
                 <div class="kpi-value">${formatCurrency(reviewTotal)}</div>
-                <div class="kpi-detail">${rfcInReview.length} RFCs (${rfcInReview.filter(r=>r.credit).length} credits)</div>
+                <div class="kpi-detail">${pricedReview.length} priced (${creditCount} credit${creditCount!==1?'s':''}) + ${pendingEstCount} pending estimate</div>
             </div>
             <div class="kpi-card red">
                 <div class="kpi-label">In Revision</div>
@@ -1224,7 +1249,7 @@
         const ctx6 = document.getElementById('chart-rfc-status').getContext('2d');
 
         // Green shades for each OCO
-        const coColors = ['#1b8c1b','#22a522','#3ec43e','#6dd86d','#9ae89a','#c4f4c4'];
+        const coColors = ['#1b8c1b','#22a522','#3ec43e','#6dd86d','#9ae89a','#c4f4c4','#0d5e0d'];
         const coDatasets = changeOrders.map((co, i) => ({
             label: co.co + ' ($' + (co.rfcs.reduce((s,r)=>s+r.amount,0)/1000).toFixed(0) + 'k)',
             data: [co.rfcs.reduce((s,r)=>s+r.amount, 0)],
@@ -1389,11 +1414,15 @@
         const tableRFCReviewBody = document.querySelector('#table-rfc-review tbody');
         rfcInReview.forEach(rfc => {
             const row = document.createElement('tr');
-            const label = rfc.credit ? ' <span style="color:#1b8c1b; font-size:11px; font-weight:600;">CREDIT</span>' : '';
+            let label = '';
+            if (rfc.credit) label = ' <span style="color:#1b8c1b; font-size:11px; font-weight:600;">CREDIT</span>';
+            if (rfc.rom) label = ' <span style="color:#e65100; font-size:11px; font-weight:600;">ROM</span>';
+            if (rfc.pendingEstimate) label = ' <span style="color:#7f8c8d; font-size:11px; font-weight:600;">PENDING ESTIMATE</span>';
+            const amtDisplay = rfc.pendingEstimate ? '<span style="color:#7f8c8d;">TBD</span>' : formatAmount(rfc.amount);
             row.innerHTML = `
                 <td>${rfc.num}</td>
                 <td>${rfc.desc}${label}</td>
-                <td>${formatAmount(rfc.amount)}</td>
+                <td>${amtDisplay}</td>
                 <td>${rfc.date}</td>
             `;
             tableRFCReviewBody.appendChild(row);
