@@ -467,6 +467,30 @@
                     <tbody></tbody>
                 </table>
             </div>
+
+            <!-- RFC Responsibility Breakdown -->
+            <div class="chart-card full" style="margin-top:24px;">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #1a1a2e;">RFC Cost by Responsible Party</h3>
+                <div style="font-size:12px; color:#666; margin-bottom:14px;">Source: RFC Log dated 04/21/26 — items with assigned responsible party only</div>
+                <div class="chart-container" style="height:240px;">
+                    <canvas id="chart-rfc-party"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card full table-with-border" style="border-top:3px solid #5b9bd5; margin-top:16px;">
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #1a1a2e;">RFC Responsibility Breakdown</h3>
+                <table id="table-rfc-party" style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr>
+                            <th style="width:70px;">RFC #</th>
+                            <th>Description</th>
+                            <th style="width:140px;">Status</th>
+                            <th style="width:120px; text-align:right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-rfc-party-body"></tbody>
+                </table>
+            </div>
         </section>
     </div>
 
@@ -755,7 +779,7 @@
             <div class="kpi-card">
                 <div class="kpi-label">Planned % Complete</div>
                 <div class="kpi-value">${plannedPct.toFixed(1)}%</div>
-                <div class="kpi-detail">Per P6 Schedule (03/24/26)</div>
+                <div class="kpi-detail">Per P6 Schedule (04/21/26)</div>
             </div>
             <div class="kpi-card green">
                 <div class="kpi-label">Actual % Complete</div>
@@ -1473,6 +1497,184 @@
             <td></td>
         `;
         tableRFCRevisionBody.appendChild(revisionTotalsRow);
+
+        // ========== RFC RESPONSIBILITY BREAKDOWN ==========
+        const rfcByParty = [
+            {
+                party: "Allowance", color: "#5b9bd5",
+                items: [
+                    { num:"77",  desc:"Elevator Structural Steel",          status:"Sent To Owner",    amount:16315  },
+                    { num:"1",   desc:"ODOT Lease",                          status:"Approved",         amount:46546  },
+                    { num:"5",   desc:"Contaminated Soils Haul Off #1",      status:"Approved",         amount:459606 },
+                    { num:"20",  desc:"Contaminated Soils Haul Off #2",      status:"Approved",         amount:353934 },
+                    { num:"26",  desc:"Contaminated Soils Haul Off #3",      status:"Approved",         amount:159972 },
+                    { num:"49",  desc:"Contaminated Soils #4",               status:"Approved",         amount:13382  },
+                    { num:"59",  desc:"Contaminated Soils #5",               status:"Approved",         amount:13727  },
+                ]
+            },
+            {
+                party: "Designer", color: "#ed7d31",
+                items: [
+                    { num:"13",  desc:"RFI#006 - Elevator Pit Discrepancy",                    status:"Pending Estimate", amount:2618   },
+                    { num:"36",  desc:"RFI#045R1 - CJs",                                       status:"Sent To Owner",    amount:3693   },
+                    { num:"44",  desc:"RFI #36: Plumbing Penetration Depths and Rebar Req.",   status:"Sent To Owner",    amount:29470  },
+                    { num:"64",  desc:"RFI#80 & 80.1 Level 1 Mechanical Grill Question",       status:"Sent To Owner",    amount:3934   },
+                    { num:"73",  desc:"RFI #98: Kitchen 210 - Wall Type Confirmation",          status:"Sent To Owner",    amount:18647  },
+                    { num:"90",  desc:"RFI#144 Storefront: Exterior Glazing Revision",          status:"Sent To Owner",    amount:2579   },
+                    { num:"96",  desc:"RFI#135 HM Door & Frame Submittal Comments",             status:"Ready To Send",    amount:2480   },
+                    { num:"3",   desc:"IFC Changes Early Subs",                                 status:"Approved",         amount:790265 },
+                    { num:"7",   desc:"IFC Change Sub Group #2",                                status:"Approved",         amount:141473 },
+                    { num:"41",  desc:"RFI#053 - Steel Coordination Meeting RFI",               status:"Approved",         amount:3309   },
+                    { num:"46",  desc:"RFI#60 - Alternative Water Heater Selection",            status:"Approved",         amount:2529   },
+                    { num:"47",  desc:"RFI#66 - Zone 1 & 2 Follow Up Questions",               status:"Approved",         amount:7610   },
+                    { num:"55",  desc:"RFI#54 - Stormwater Canopy Steel",                       status:"Approved",         amount:2548   },
+                    { num:"75",  desc:"RFI #103: AHU-1 & 2 Powered Exhaust Coordination",      status:"Approved",         amount:-1210  },
+                    { num:"87",  desc:"RFI#121 Dryer Vent Clarifications",                      status:"Approved",         amount:-4500  },
+                ]
+            },
+            {
+                party: "Live Nation", color: "#70ad47",
+                items: [
+                    { num:"48A", desc:"Structural Steel Acceleration",                           status:"Sent To Owner",    amount:86749  },
+                    { num:"52",  desc:"5 Day Schedule Credit",                                   status:"Sent To Owner",    amount:-28943 },
+                    { num:"57",  desc:"Bulletin #2 & RFI#118 Plumbing Bulletin #2 Clarifications", status:"Pending Estimate", amount:8545 },
+                    { num:"88",  desc:"RFI#99 Acoustical Wall Panel Clarifications",             status:"Sent To Owner",    amount:16366  },
+                    { num:"105", desc:"Acoustic Lounge Stick Pin ROM Pricing",                   status:"Pending Estimate", amount:35566  },
+                    { num:"21",  desc:"Bulletin #1",                                             status:"Approved",         amount:116321 },
+                    { num:"35",  desc:"RFI#044 - Floor Box @ Lobby Vestibule 100",              status:"Approved",         amount:-2117  },
+                    { num:"54",  desc:"DCI Shotcrete ASR - Contingency Allocation",             status:"Approved",         amount:-3150  },
+                ]
+            },
+            {
+                party: "AHJ", color: "#ffc000",
+                items: [
+                    { num:"61",  desc:"RFI#74 Gas Meter Relocate",                              status:"Sent To Owner",    amount:3492   },
+                    { num:"50",  desc:"PGE Design Update Changes Pending PBOT & ODOT Approval", status:"Owner Reviewing",  amount:32148  },
+                    { num:"23",  desc:"ASI#1",                                                   status:"Approved",         amount:6008   },
+                ]
+            },
+            {
+                party: "Unforeseen Condition", color: "#9e480e",
+                items: [
+                    { num:"4",   desc:"Concrete Excavation Overage - Allowance",                status:"Approved",         amount:6813   },
+                ]
+            },
+        ];
+
+        // Status badge helper
+        const statusBadge = (status) => {
+            if (status === 'Approved') return `<span style="background:#d4edda; color:#155724; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:600;">Approved</span>`;
+            if (status === 'Pending Estimate') return `<span style="background:#fff3cd; color:#856404; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:600;">Pending Est.</span>`;
+            if (status === 'Owner Reviewing') return `<span style="background:#cce5ff; color:#004085; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:600;">Owner Review</span>`;
+            return `<span style="background:#fff3cd; color:#856404; font-size:11px; padding:2px 7px; border-radius:10px; font-weight:600;">${status}</span>`;
+        };
+
+        const partyTableBody = document.getElementById('table-rfc-party-body');
+        let grandPartyTotal = 0;
+        let grandPartyCount = 0;
+
+        rfcByParty.forEach(group => {
+            const groupTotal = group.items.reduce((s, i) => s + i.amount, 0);
+            const approvedTotal_p = group.items.filter(i => i.status==='Approved').reduce((s,i) => s+i.amount, 0);
+            const inReviewTotal_p = groupTotal - approvedTotal_p;
+            grandPartyTotal += groupTotal;
+            grandPartyCount += group.items.length;
+
+            // Party header row
+            const hdr = document.createElement('tr');
+            hdr.style.cssText = `background:${group.color}20; border-top:2px solid ${group.color};`;
+            hdr.innerHTML = `
+                <td colspan="2" style="font-weight:700; font-size:13px; padding:8px 10px; color:${group.color === '#ffc000' ? '#856404' : group.color};">
+                    ${group.party}
+                    <span style="font-weight:400; color:#555; font-size:11px; margin-left:8px;">${group.items.length} RFC${group.items.length!==1?'s':''}</span>
+                </td>
+                <td style="font-size:11px; color:#555; padding:8px 10px;">
+                    In Review: ${formatCurrency(inReviewTotal_p)}
+                </td>
+                <td style="text-align:right; font-weight:700; padding:8px 10px; font-size:13px;">
+                    ${formatCurrency(groupTotal)}
+                </td>
+            `;
+            partyTableBody.appendChild(hdr);
+
+            // Individual RFC rows
+            group.items.forEach(item => {
+                const row = document.createElement('tr');
+                const amtStyle = item.amount < 0 ? 'color:#1b8c1b; font-weight:600;' : '';
+                const amtDisplay = item.amount < 0
+                    ? `<span style="color:#1b8c1b; font-weight:600;">(${formatCurrency(Math.abs(item.amount))})</span>`
+                    : formatCurrency(item.amount);
+                row.innerHTML = `
+                    <td style="padding-left:18px; color:#555;">${item.num}</td>
+                    <td style="padding-left:10px;">${item.desc}</td>
+                    <td>${statusBadge(item.status)}</td>
+                    <td style="text-align:right; ${amtStyle}">${amtDisplay}</td>
+                `;
+                partyTableBody.appendChild(row);
+            });
+        });
+
+        // Grand total row
+        const partyGrandRow = document.createElement('tr');
+        partyGrandRow.className = 'totals-row';
+        partyGrandRow.innerHTML = `
+            <td colspan="2"><strong>GRAND TOTAL (${grandPartyCount} RFCs across ${rfcByParty.length} parties)</strong></td>
+            <td></td>
+            <td style="text-align:right;">${formatCurrency(grandPartyTotal)}</td>
+        `;
+        partyTableBody.appendChild(partyGrandRow);
+
+        // Horizontal stacked bar chart — Approved vs In Review by party
+        const ctx8 = document.getElementById('chart-rfc-party').getContext('2d');
+        const partyLabels = rfcByParty.map(g => g.party);
+        const partyApproved = rfcByParty.map(g => Math.max(0, g.items.filter(i=>i.status==='Approved').reduce((s,i)=>s+i.amount,0)));
+        const partyInReview = rfcByParty.map(g => {
+            const tot = g.items.reduce((s,i)=>s+i.amount,0);
+            const apr = g.items.filter(i=>i.status==='Approved').reduce((s,i)=>s+i.amount,0);
+            return Math.max(0, tot - apr);
+        });
+
+        new Chart(ctx8, {
+            type: 'bar',
+            data: {
+                labels: partyLabels,
+                datasets: [
+                    {
+                        label: 'Approved',
+                        data: partyApproved,
+                        backgroundColor: '#1b8c1b',
+                        borderRadius: 3,
+                    },
+                    {
+                        label: 'In Review / Pending',
+                        data: partyInReview,
+                        backgroundColor: '#f5c400',
+                        borderRadius: 3,
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } },
+                    tooltip: {
+                        callbacks: {
+                            label: ctx => `${ctx.dataset.label}: ${new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(ctx.parsed.x)}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { callback: v => '$' + (v>=1000000 ? (v/1000000).toFixed(1)+'M' : (v/1000).toFixed(0)+'K'), font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y: { stacked: true, ticks: { font: { size: 12 } } }
+                }
+            }
+        });
     </script>
 </body>
 </html>
