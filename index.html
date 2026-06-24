@@ -114,14 +114,14 @@ tr:nth-child(even){background:#fafbfd;}tr:hover{background:#eef2f7;}
  <div class="kpis">
   <div class="kpi"><div class="label">Total Contingency</div><div class="value">$804K</div><div class="sub">$804,492</div></div>
   <div class="kpi warning"><div class="label">Used / Billed</div><div class="value">$446K</div><div class="sub">55% utilized</div></div>
-  <div class="kpi blue"><div class="label">Booked (not billed)</div><div class="value">$11K</div><div class="sub">1% &middot; CMGC-013</div></div>
-  <div class="kpi success"><div class="label">Remaining</div><div class="value">$347K</div><div class="sub">43% available &middot; No new draws PA#9</div></div>
+  <div class="kpi blue"><div class="label">Booked (not billed)</div><div class="value">$19K</div><div class="sub">2% &middot; CMGC-013 &amp; CMGC-020</div></div>
+  <div class="kpi success"><div class="label">Remaining</div><div class="value">$340K</div><div class="sub">42% available &middot; Log 5/24/26</div></div>
  </div>
  <div class="charts">
   <div class="card"><h3>Contingency Utilization</h3><div class="chart-wrap"><canvas id="gauge"></canvas></div></div>
   <div class="card"><h3>Burn-Down &mdash; Remaining by Pay App</h3><div class="chart-wrap"><canvas id="burn"></canvas></div></div>
  </div>
- <div class="card full"><h3>CMGC Contingency Log (as of 4/24/2026 &mdash; no new draws in PA#9)</h3>
+ <div class="card full"><h3>CMGC Contingency Log (as of 5/24/2026 &mdash; no new billed draws in PA#9)</h3>
   <table><thead><tr><th>CMGC #</th><th>RFC #</th><th>Description</th><th class="right">Total</th><th class="right">Billed</th><th class="center">Pay App</th><th>Status</th></tr></thead>
   <tbody>
   <tr><td>CMGC-001</td><td>RFC006</td><td>Water Permit - Temp Water Meter</td><td class="right">$4,262</td><td class="right">$4,262</td><td class="center">2</td><td><span class="badge green">Billed</span></td></tr>
@@ -143,7 +143,8 @@ tr:nth-child(even){background:#fafbfd;}tr:hover{background:#eef2f7;}
   <tr><td>CMGC-017</td><td>RFC#81</td><td>RFI#115 S6060 Beam Embed</td><td class="right">$764</td><td class="right">$764</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
   <tr><td>CMGC-018</td><td>RFC#82</td><td>RFI#111 HSS Beam Seat</td><td class="right">$5,106</td><td class="right">$5,106</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
   <tr><td>CMGC-019</td><td>RFC#48-B</td><td>Structural Steel Acceleration</td><td class="right">$260,246</td><td class="right">$260,246</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
-  <tr><td>CMGC-020</td><td>RFC#24</td><td>Clarifying Wall Conditions</td><td class="right">$0</td><td class="right">$0</td><td class="center">&mdash;</td><td><span class="badge gray">Initiated</span></td></tr>
+  <tr><td>CMGC-020</td><td>RFC#24</td><td>Clarifying Wall Condition Below Stairs</td><td class="right">$7,170</td><td class="right">$0</td><td class="center">&mdash;</td><td><span class="badge blue">Booked</span></td></tr>
+  <tr><td>CMGC-021</td><td>RFC#92</td><td>Truss Girder Design Changes</td><td class="right">$0</td><td class="right">$0</td><td class="center">&mdash;</td><td><span class="badge gray">TBD</span></td></tr>
   </tbody></table>
  </div>
 </div>
@@ -316,9 +317,9 @@ new Chart(pctBar,{type:'bar',data:{labels:["Sep 25","Oct 25","Nov 25","Dec 25","
  {label:'Actual %',data:[1.48,5.29,9.84,13.23,16.84,26.84,29.91,35.07,39.76],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger]}
 ]},options:{maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>v+'%'}}},plugins:{legend:{position:'bottom'}}}});
 
-new Chart(gauge,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],datasets:[{data:[445614,11482,347396],backgroundColor:[C.warning,C.accent,C.success]}]},options:{maintainAspectRatio:false,circumference:180,rotation:270,cutout:'65%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
+new Chart(gauge,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],datasets:[{data:[445614,18652,340226],backgroundColor:[C.warning,C.accent,C.success]}]},options:{maintainAspectRatio:false,circumference:180,rotation:270,cutout:'65%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
 
-new Chart(burn,{type:'line',data:{labels:["Start","PA1","PA2","PA3","PA4","PA5","PA6","PA7","PA8","PA9"],datasets:[{label:'Remaining Contingency',data:[804492,804492,800230,773280,734661,638359,632149,624994,358878,358878],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
+new Chart(burn,{type:'line',data:{labels:["Start","PA1","PA2","PA3","PA4","PA5","PA6","PA7","PA8","PA9"],datasets:[{label:'Remaining Contingency',data:[804492,804492,800230,773280,734661,638359,632149,624994,347396,340226],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
 
 new Chart(rfcBar,{type:'bar',data:{labels:['Pending Approval','Holds & ROM'],datasets:[{label:'Exposure ($)',data:[942832,130762],backgroundColor:[C.danger,C.warning]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
 
