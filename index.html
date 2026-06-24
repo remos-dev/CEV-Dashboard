@@ -3,54 +3,63 @@
 <title>CEV (Steelhead) - Pay App Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root { --primary:#1f3a5f; --accent:#3a7ca5; --success:#2c8a3e; --warning:#e09f3e; --danger:#9e2a2b; --bg:#f6f7fb; --card:#fff; --text:#1a1a2e; --muted:#6c757d; }
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); padding:18px; }
-.header { background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; padding:24px; border-radius:10px; margin-bottom:18px; box-shadow:0 4px 12px rgba(0,0,0,.08);}
-.header h1 { font-size:26px; margin-bottom:4px; }
-.header .sub { opacity:.9; font-size:14px;}
-.tabs { display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
-.tab { padding:10px 18px; background:var(--card); border:1px solid #e0e3eb; border-radius:8px 8px 0 0; cursor:pointer; font-weight:600; color:var(--muted); }
-.tab.active { background:var(--primary); color:#fff; border-color:var(--primary); }
-.section { display:none; } .section.active { display:block; }
-.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:18px; }
-.kpi { background:var(--card); padding:18px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.05); border-left:4px solid var(--accent);}
-.kpi .label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px;}
-.kpi .value { font-size:24px; font-weight:700; color:var(--primary); margin-top:4px;}
-.kpi .sub { font-size:12px; color:var(--muted); margin-top:4px;}
-.kpi.success { border-left-color:var(--success);} .kpi.warning { border-left-color:var(--warning);} .kpi.danger { border-left-color:var(--danger);}
-.charts { display:grid; grid-template-columns:repeat(auto-fit,minmax(450px,1fr)); gap:14px; margin-bottom:14px;}
-.card { background:var(--card); padding:18px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.05);}
-.card h3 { color:var(--primary); margin-bottom:12px; font-size:16px;}
-.full { grid-column:1/-1; }
-.chart-wrap { position:relative; height:340px; }
-table { width:100%; border-collapse:collapse; font-size:13px;}
-th { background:var(--primary); color:#fff; padding:8px 10px; text-align:left; font-weight:600;}
-td { padding:8px 10px; border-bottom:1px solid #eee;}
-tr:nth-child(even) { background:#fafbfd;} tr:hover { background:#eef2f7;}
-.right { text-align:right;} .center { text-align:center; }
-.badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600;}
-.badge.green { background:#d4edda; color:#1d643b;} .badge.amber { background:#fff3cd; color:#856404;}
-.badge.red { background:#f8d7da; color:#721c24;} .badge.blue { background:#d4e8f4; color:#1f3a5f;} .badge.gray { background:#e9ecef; color:#495057;}
-.footnote { color:var(--muted); font-size:12px; margin-top:8px; font-style:italic;}
+:root{--primary:#1f3a5f;--accent:#3a7ca5;--success:#2c8a3e;--warning:#e09f3e;--danger:#9e2a2b;--bg:#f6f7fb;--card:#fff;--text:#1a1a2e;--muted:#6c757d;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);padding:18px;}
+.header{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;padding:24px;border-radius:10px;margin-bottom:18px;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.header h1{font-size:26px;margin-bottom:4px;}
+.header .sub{opacity:.9;font-size:14px;}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{padding:10px 18px;background:var(--card);border:1px solid #e0e3eb;border-radius:8px 8px 0 0;cursor:pointer;font-weight:600;color:var(--muted);}
+.tab.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.section{display:none;}.section.active{display:block;}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:18px;}
+.kpi{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.05);border-left:4px solid var(--accent);}
+.kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.kpi .value{font-size:24px;font-weight:700;color:var(--primary);margin-top:4px;}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.kpi.success{border-left-color:var(--success);}.kpi.warning{border-left-color:var(--warning);}.kpi.danger{border-left-color:var(--danger);}
+.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:14px;margin-bottom:14px;}
+.card{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+.card h3{color:var(--primary);margin-bottom:12px;font-size:16px;}
+.full{grid-column:1/-1;}
+.chart-wrap{position:relative;height:340px;}
+.chart-wrap-lg{position:relative;height:700px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--primary);color:#fff;padding:8px 10px;text-align:left;font-weight:600;}
+td{padding:8px 10px;border-bottom:1px solid #eee;}
+tr:nth-child(even){background:#fafbfd;}tr:hover{background:#eef2f7;}
+.right{text-align:right;}.center{text-align:center;}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;}
+.badge.green{background:#d4edda;color:#1d643b;}.badge.amber{background:#fff3cd;color:#856404;}
+.badge.red{background:#f8d7da;color:#721c24;}.badge.blue{background:#d4e8f4;color:#1f3a5f;}.badge.gray{background:#e9ecef;color:#495057;}
+.div-header td{background:#e8edf5;font-weight:700;color:var(--primary);font-size:12px;text-transform:uppercase;letter-spacing:.4px;}
+.total-row td{background:#1f3a5f;color:#fff;font-weight:700;}
+.total-row td.right{color:#fff;}
+.savings{color:#2c8a3e;font-weight:600;}
+.overrun{color:#9e2a2b;font-weight:600;}
+.footnote{color:var(--muted);font-size:12px;margin-top:8px;font-style:italic;}
 </style></head><body>
 <div class="header"><h1>CEV (Steelhead) — Pay App Dashboard</h1>
-<div class="sub">Live Nation Worldwide / Colas Construction Inc. · Contract Sum to Date: $45,266,056 · As of Pay App #8 (4/30/2026) · Generated June 1, 2026</div></div>
+<div class="sub">Live Nation Worldwide / Colas Construction Inc. &middot; Contract Sum to Date: $45,320,379 &middot; As of Pay App #9 (5/31/2026) &middot; Updated June 17, 2026</div></div>
 <div class="tabs">
 <div class="tab active" data-tab="overview">Pay App Overview</div>
 <div class="tab" data-tab="schedule">Schedule vs Actual</div>
 <div class="tab" data-tab="contingency">Contingency Tracker</div>
-<div class="tab" data-tab="rfc">RFC Cost Risk</div></div>
+<div class="tab" data-tab="rfc">RFC Cost Risk</div>
+<div class="tab" data-tab="buyout">Buy Out Log</div>
+</div>
 
+<!-- ===== PAY APP OVERVIEW ===== -->
 <div class="section active" id="overview">
  <div class="kpis">
   <div class="kpi"><div class="label">Original Contract</div><div class="value">$43.01M</div><div class="sub">$43,011,259</div></div>
-  <div class="kpi"><div class="label">Approved Change Orders</div><div class="value">$2.25M</div><div class="sub">5.2% of original</div></div>
-  <div class="kpi"><div class="label">Contract to Date</div><div class="value">$45.27M</div><div class="sub">$45,266,056</div></div>
-  <div class="kpi success"><div class="label">Completed &amp; Stored</div><div class="value">$15.87M</div><div class="sub">35.07% complete</div></div>
-  <div class="kpi"><div class="label">Total Paid (cumulative)</div><div class="value">$15.08M</div><div class="sub">8 pay apps</div></div>
-  <div class="kpi warning"><div class="label">Retainage Held</div><div class="value">$0.79M</div><div class="sub">5% of completed</div></div>
-  <div class="kpi danger"><div class="label">Balance to Finish</div><div class="value">$30.19M</div><div class="sub">incl. retainage</div></div>
+  <div class="kpi"><div class="label">Approved Change Orders</div><div class="value">$2.31M</div><div class="sub">5.4% of original &middot; +$54,323 PA#9</div></div>
+  <div class="kpi"><div class="label">Contract to Date</div><div class="value">$45.32M</div><div class="sub">$45,320,379</div></div>
+  <div class="kpi success"><div class="label">Completed &amp; Stored</div><div class="value">$18.02M</div><div class="sub">39.76% complete</div></div>
+  <div class="kpi"><div class="label">Total Paid (cumulative)</div><div class="value">$17.19M</div><div class="sub">9 pay apps</div></div>
+  <div class="kpi warning"><div class="label">Retainage Held</div><div class="value">$0.83M</div><div class="sub">4.6% avg of completed</div></div>
+  <div class="kpi danger"><div class="label">Balance to Finish</div><div class="value">$28.13M</div><div class="sub">incl. retainage</div></div>
  </div>
  <div class="charts">
   <div class="card"><h3>Cumulative Completed &amp; Stored ($)</h3><div class="chart-wrap"><canvas id="cumChart"></canvas></div></div>
@@ -58,82 +67,268 @@ tr:nth-child(even) { background:#fafbfd;} tr:hover { background:#eef2f7;}
  </div>
  <div class="card full"><h3>Pay Application Summary</h3>
   <table><thead><tr><th>PA #</th><th>Period Through</th><th class="right">Contract to Date</th><th class="right">Completed &amp; Stored</th><th class="right">% Complete</th><th class="right">Current Payment</th><th class="right">Balance to Finish</th></tr></thead>
-  <tbody><tr><td>1</td><td>9/30/2025</td><td class="right">$43,011,259</td><td class="right">$636,962.00</td><td class="right">1.48%</td><td class="right">$605,113.90</td><td class="right">$42,406,145</td></tr><tr><td>2</td><td>10/31/2025</td><td class="right">$43,524,224</td><td class="right">$2,303,286.46</td><td class="right">5.29%</td><td class="right">$1,583,008.24</td><td class="right">$41,336,102</td></tr><tr><td>3</td><td>11/30/2025</td><td class="right">$43,878,158</td><td class="right">$4,317,062.46</td><td class="right">9.84%</td><td class="right">$1,913,087.20</td><td class="right">$39,776,949</td></tr><tr><td>4</td><td>12/31/2025</td><td class="right">$44,038,130</td><td class="right">$5,825,247.46</td><td class="right">13.23%</td><td class="right">$1,432,775.75</td><td class="right">$38,504,145</td></tr><tr><td>5</td><td>1/31/2026</td><td class="right">$45,099,571</td><td class="right">$7,593,909.46</td><td class="right">16.84%</td><td class="right">$1,680,228.90</td><td class="right">$37,885,357</td></tr><tr><td>6</td><td>2/28/2026</td><td class="right">$45,099,571</td><td class="right">$12,104,372.46</td><td class="right">26.84%</td><td class="right">$4,329,171.70</td><td class="right">$33,556,185</td></tr><tr><td>7</td><td>3/31/2026</td><td class="right">$45,124,325</td><td class="right">$13,495,870.77</td><td class="right">29.91%</td><td class="right">$1,277,691.54</td><td class="right">$32,303,248</td></tr><tr><td>8</td><td>4/30/2026</td><td class="right">$45,266,056</td><td class="right">$15,873,608.77</td><td class="right">35.07%</td><td class="right">$2,258,851.10</td><td class="right">$30,186,128</td></tr></tbody></table>
-  <div class="footnote">Pay App PDFs are scanned (image) AIA G702/G703 forms; figures carried from validated extraction and checked for arithmetic consistency (5% retainage, earned-less-previous reconciliations all tie out).</div>
+  <tbody>
+  <tr><td>1</td><td>9/30/2025</td><td class="right">$43,011,259</td><td class="right">$636,962.00</td><td class="right">1.48%</td><td class="right">$605,113.90</td><td class="right">$42,406,145</td></tr>
+  <tr><td>2</td><td>10/31/2025</td><td class="right">$43,524,224</td><td class="right">$2,303,286.46</td><td class="right">5.29%</td><td class="right">$1,583,008.24</td><td class="right">$41,336,102</td></tr>
+  <tr><td>3</td><td>11/30/2025</td><td class="right">$43,878,158</td><td class="right">$4,317,062.46</td><td class="right">9.84%</td><td class="right">$1,913,087.20</td><td class="right">$39,776,949</td></tr>
+  <tr><td>4</td><td>12/31/2025</td><td class="right">$44,038,130</td><td class="right">$5,825,247.46</td><td class="right">13.23%</td><td class="right">$1,432,775.75</td><td class="right">$38,504,145</td></tr>
+  <tr><td>5</td><td>1/31/2026</td><td class="right">$45,099,571</td><td class="right">$7,593,909.46</td><td class="right">16.84%</td><td class="right">$1,680,228.90</td><td class="right">$37,885,357</td></tr>
+  <tr><td>6</td><td>2/28/2026</td><td class="right">$45,099,571</td><td class="right">$12,104,372.46</td><td class="right">26.84%</td><td class="right">$4,329,171.70</td><td class="right">$33,556,185</td></tr>
+  <tr><td>7</td><td>3/31/2026</td><td class="right">$45,124,325</td><td class="right">$13,495,870.77</td><td class="right">29.91%</td><td class="right">$1,277,691.54</td><td class="right">$32,303,248</td></tr>
+  <tr><td>8</td><td>4/30/2026</td><td class="right">$45,266,056</td><td class="right">$15,873,608.77</td><td class="right">35.07%</td><td class="right">$2,258,851.10</td><td class="right">$30,186,128</td></tr>
+  <tr><td><strong>9</strong></td><td><strong>5/31/2026</strong></td><td class="right"><strong>$45,320,379</strong></td><td class="right"><strong>$18,020,746.77</strong></td><td class="right"><strong>39.76%</strong></td><td class="right"><strong>$2,111,281.10</strong></td><td class="right"><strong>$28,129,170</strong></td></tr>
+  </tbody></table>
+  <div class="footnote">Pay App PDFs are scanned AIA G702/G703 forms; figures carried from validated extraction. Retainage: 4.59% completed work + 5.00% stored material. All earned-less-previous reconciliations tie out.</div>
  </div>
 </div>
 
+<!-- ===== SCHEDULE vs ACTUAL ===== -->
 <div class="section" id="schedule">
  <div class="kpis">
-  <div class="kpi success"><div class="label">Actual % (Apr 2026)</div><div class="value">35.07%</div><div class="sub">Earned value / contract</div></div>
-  <div class="kpi"><div class="label">Planned % (Apr 2026)</div><div class="value">35.0%</div><div class="sub">P6 baseline 03/09/26</div></div>
-  <div class="kpi success"><div class="label">Schedule Variance</div><div class="value">+0.07%</div><div class="sub">Ahead of baseline</div></div>
-  <div class="kpi"><div class="label">Forecast Completion</div><div class="value">Jul 2027</div><div class="sub">TCO 7/15/2027</div></div>
+  <div class="kpi success"><div class="label">Actual % (May 2026)</div><div class="value">39.76%</div><div class="sub">Earned value / contract to date</div></div>
+  <div class="kpi warning"><div class="label">Planned % (May 2026)</div><div class="value">43.0%</div><div class="sub">Per P6 Schedule (04/28/26)</div></div>
+  <div class="kpi danger"><div class="label">Schedule Variance</div><div class="value">&minus;3.24%</div><div class="sub">Behind baseline</div></div>
+  <div class="kpi"><div class="label">Forecast Completion</div><div class="value">Jul 2027</div><div class="sub">TCO 7/12/2027 (adjusted)</div></div>
  </div>
  <div class="charts">
   <div class="card full"><h3>S-Curve — Planned vs Actual % Complete</h3><div class="chart-wrap"><canvas id="sCurve"></canvas></div></div>
-  <div class="card full"><h3>Planned vs Actual % (through Apr 2026)</h3><div class="chart-wrap"><canvas id="pctBar"></canvas></div></div>
+  <div class="card full"><h3>Planned vs Actual % (through May 2026)</h3><div class="chart-wrap"><canvas id="pctBar"></canvas></div></div>
  </div>
  <div class="card full"><h3>Variance Detail</h3>
   <table><thead><tr><th>Period</th><th class="right">Planned %</th><th class="right">Actual %</th><th class="right">Variance</th><th class="right">Actual $</th></tr></thead>
-  <tbody><tr><td>Sep 25</td><td class="right">1.0%</td><td class="right">1.48%</td><td class="right"><span class="badge green">+0.48%</span></td><td class="right">$636,962</td></tr><tr><td>Oct 25</td><td class="right">3.0%</td><td class="right">5.29%</td><td class="right"><span class="badge green">+2.29%</span></td><td class="right">$2,303,286</td></tr><tr><td>Nov 25</td><td class="right">6.5%</td><td class="right">9.84%</td><td class="right"><span class="badge green">+3.34%</span></td><td class="right">$4,317,062</td></tr><tr><td>Dec 25</td><td class="right">10.5%</td><td class="right">13.23%</td><td class="right"><span class="badge green">+2.73%</span></td><td class="right">$5,825,247</td></tr><tr><td>Jan 26</td><td class="right">15.5%</td><td class="right">16.84%</td><td class="right"><span class="badge green">+1.34%</span></td><td class="right">$7,593,909</td></tr><tr><td>Feb 26</td><td class="right">21.0%</td><td class="right">26.84%</td><td class="right"><span class="badge green">+5.84%</span></td><td class="right">$12,104,372</td></tr><tr><td>Mar 26</td><td class="right">27.5%</td><td class="right">29.91%</td><td class="right"><span class="badge green">+2.41%</span></td><td class="right">$13,495,871</td></tr><tr><td>Apr 26</td><td class="right">35.0%</td><td class="right">35.07%</td><td class="right"><span class="badge green">+0.07%</span></td><td class="right">$15,873,609</td></tr></tbody></table></div>
+  <tbody>
+  <tr><td>Sep 25</td><td class="right">1.0%</td><td class="right">1.48%</td><td class="right"><span class="badge green">+0.48%</span></td><td class="right">$636,962</td></tr>
+  <tr><td>Oct 25</td><td class="right">3.0%</td><td class="right">5.29%</td><td class="right"><span class="badge green">+2.29%</span></td><td class="right">$2,303,286</td></tr>
+  <tr><td>Nov 25</td><td class="right">6.5%</td><td class="right">9.84%</td><td class="right"><span class="badge green">+3.34%</span></td><td class="right">$4,317,062</td></tr>
+  <tr><td>Dec 25</td><td class="right">10.5%</td><td class="right">13.23%</td><td class="right"><span class="badge green">+2.73%</span></td><td class="right">$5,825,247</td></tr>
+  <tr><td>Jan 26</td><td class="right">15.5%</td><td class="right">16.84%</td><td class="right"><span class="badge green">+1.34%</span></td><td class="right">$7,593,909</td></tr>
+  <tr><td>Feb 26</td><td class="right">21.0%</td><td class="right">26.84%</td><td class="right"><span class="badge green">+5.84%</span></td><td class="right">$12,104,372</td></tr>
+  <tr><td>Mar 26</td><td class="right">27.5%</td><td class="right">29.91%</td><td class="right"><span class="badge green">+2.41%</span></td><td class="right">$13,495,871</td></tr>
+  <tr><td>Apr 26</td><td class="right">35.0%</td><td class="right">35.07%</td><td class="right"><span class="badge green">+0.07%</span></td><td class="right">$15,873,609</td></tr>
+  <tr><td><strong>May 26</strong></td><td class="right">43.0%</td><td class="right"><strong>39.76%</strong></td><td class="right"><span class="badge red">&minus;3.24%</span></td><td class="right"><strong>$18,020,747</strong></td></tr>
+  </tbody></table>
+ </div>
 </div>
 
+<!-- ===== CONTINGENCY ===== -->
 <div class="section" id="contingency">
  <div class="kpis">
   <div class="kpi"><div class="label">Total Contingency</div><div class="value">$804K</div><div class="sub">$804,492</div></div>
   <div class="kpi warning"><div class="label">Used / Billed</div><div class="value">$446K</div><div class="sub">55% utilized</div></div>
-  <div class="kpi blue"><div class="label">Booked (not billed)</div><div class="value">$11K</div><div class="sub">1%</div></div>
+  <div class="kpi blue"><div class="label">Booked (not billed)</div><div class="value">$11K</div><div class="sub">1% &middot; CMGC-013</div></div>
   <div class="kpi success"><div class="label">Remaining</div><div class="value">$347K</div><div class="sub">43% available</div></div>
  </div>
  <div class="charts">
   <div class="card"><h3>Contingency Utilization</h3><div class="chart-wrap"><canvas id="gauge"></canvas></div></div>
   <div class="card"><h3>Burn-Down — Remaining by Pay App</h3><div class="chart-wrap"><canvas id="burn"></canvas></div></div>
  </div>
- <div class="card full"><h3>CMGC Contingency Log (as of 4/24/2026)</h3>
+ <div class="card full"><h3>CMGC Contingency Log (as of 4/24/2026 — no new draws PA#9)</h3>
   <table><thead><tr><th>CMGC #</th><th>RFC #</th><th>Description</th><th class="right">Total</th><th class="right">Billed</th><th class="center">Pay App</th><th>Status</th></tr></thead>
-  <tbody><tr><td>CMGC-001</td><td>RFC006</td><td>Water Permit - Temp Water Meter</td><td class="right">$4,262</td><td class="right">$4,262</td><td class="center">2</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-002</td><td>RFC008</td><td>1200C Erosion Control</td><td class="right">$10,488</td><td class="right">$10,488</td><td class="center">4</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-003</td><td>RFC009</td><td>Added DSM Per Field Conditions</td><td class="right">$40,081</td><td class="right">$40,081</td><td class="center">3/4</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-004</td><td>RFC010</td><td>MEP BIM Coordination</td><td class="right">$15,000</td><td class="right">$15,000</td><td class="center">4</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-005</td><td>RFC042</td><td>PGE Temp Power</td><td class="right">$43,288</td><td class="right">$43,288</td><td class="center">5</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-006</td><td>RFC003</td><td>IFC Changes Early Subs</td><td class="right">$53,014</td><td class="right">$53,014</td><td class="center">5</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-007</td><td>RFC022</td><td>RFI#19 Panel Board Sub</td><td class="right">$1,363</td><td class="right">$1,363</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-008</td><td>RFC031</td><td>RFI#038 NE Lobby Sewer</td><td class="right">$1,690</td><td class="right">$1,690</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-009</td><td>RFC024</td><td>RFI#30 Sewer Connection</td><td class="right">$1,516</td><td class="right">$1,516</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-010</td><td>RFC056</td><td>RFI#73 CMU Joist Pocket</td><td class="right">$1,417</td><td class="right">$1,417</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-011</td><td>RFC018</td><td>RFI#26 Fixed Bollard</td><td class="right">$224</td><td class="right">$224</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-012</td><td>RFC019</td><td>RFI#28 Loading Dock</td><td class="right">$1,631</td><td class="right">$1,631</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-013</td><td>RFC052</td><td>5 Day Schedule Credit</td><td class="right">$11,482</td><td class="right">$0</td><td class="center">-</td><td><span class="badge blue">Booked</span></td></tr><tr><td>CMGC-014</td><td>RFC054</td><td>Shotcrete Design Reimb</td><td class="right">$3,150</td><td class="right">$3,150</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-015</td><td>RFC#23R1</td><td>ASI#1 PGE LECA</td><td class="right">$257</td><td class="right">$257</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-016</td><td>RFC#35</td><td>RFI#44 Floor Box Location</td><td class="right">$2,117</td><td class="right">$2,117</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr><tr><td>CMGC-017</td><td>RFC#81</td><td>RFI#115 S6060 Beam Embed</td><td class="right">$764</td><td class="right">$764</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr><tr><td>CMGC-018</td><td>RFC#82</td><td>RFI#111 HSS Beam Seat</td><td class="right">$5,106</td><td class="right">$5,106</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr><tr><td>CMGC-019</td><td>RFC#48-B</td><td>Structural Steel Acceleration</td><td class="right">$260,246</td><td class="right">$260,246</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr><tr><td>CMGC-020</td><td>RFC#24</td><td>Clarifying Wall Conditions</td><td class="right">$0</td><td class="right">$0</td><td class="center">-</td><td><span class="badge gray">Initiated</span></td></tr></tbody></table></div>
+  <tbody>
+  <tr><td>CMGC-001</td><td>RFC006</td><td>Water Permit - Temp Water Meter</td><td class="right">$4,262</td><td class="right">$4,262</td><td class="center">2</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-002</td><td>RFC008</td><td>1200C Erosion Control</td><td class="right">$10,488</td><td class="right">$10,488</td><td class="center">4</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-003</td><td>RFC009</td><td>Added DSM Per Field Conditions</td><td class="right">$40,081</td><td class="right">$40,081</td><td class="center">3/4</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-004</td><td>RFC010</td><td>MEP BIM Coordination</td><td class="right">$15,000</td><td class="right">$15,000</td><td class="center">4</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-005</td><td>RFC042</td><td>PGE Temp Power</td><td class="right">$43,288</td><td class="right">$43,288</td><td class="center">5</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-006</td><td>RFC003</td><td>IFC Changes Early Subs</td><td class="right">$53,014</td><td class="right">$53,014</td><td class="center">5</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-007</td><td>RFC022</td><td>RFI#19 Panel Board Sub</td><td class="right">$1,363</td><td class="right">$1,363</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-008</td><td>RFC031</td><td>RFI#038 NE Lobby Sewer</td><td class="right">$1,690</td><td class="right">$1,690</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-009</td><td>RFC024</td><td>RFI#30 Sewer Connection</td><td class="right">$1,516</td><td class="right">$1,516</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-010</td><td>RFC056</td><td>RFI#73 CMU Joist Pocket</td><td class="right">$1,417</td><td class="right">$1,417</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-011</td><td>RFC018</td><td>RFI#26 Fixed Bollard</td><td class="right">$224</td><td class="right">$224</td><td class="center">6</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-012</td><td>RFC019</td><td>RFI#28 Loading Dock</td><td class="right">$1,631</td><td class="right">$1,631</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-013</td><td>RFC052</td><td>5 Day Schedule Credit</td><td class="right">$11,482</td><td class="right">$0</td><td class="center">—</td><td><span class="badge blue">Booked</span></td></tr>
+  <tr><td>CMGC-014</td><td>RFC054</td><td>Shotcrete Design Reimb</td><td class="right">$3,150</td><td class="right">$3,150</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-015</td><td>RFC#23R1</td><td>ASI#1 PGE LECA</td><td class="right">$257</td><td class="right">$257</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-016</td><td>RFC#35</td><td>RFI#44 Floor Box Location</td><td class="right">$2,117</td><td class="right">$2,117</td><td class="center">7</td><td><span class="badge green">Billed</span></td></tr>
+  <tr><td>CMGC-017</td><td>RFC#81</td><td>RFI#115 S6060 Beam Embed</td><td class="right">$764</td><td class="right">$764</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
+  <tr><td>CMGC-018</td><td>RFC#82</td><td>RFI#111 HSS Beam Seat</td><td class="right">$5,106</td><td class="right">$5,106</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
+  <tr><td>CMGC-019</td><td>RFC#48-B</td><td>Structural Steel Acceleration</td><td class="right">$260,246</td><td class="right">$260,246</td><td class="center">8</td><td><span class="badge amber">Pending</span></td></tr>
+  <tr><td>CMGC-020</td><td>RFC#24</td><td>Clarifying Wall Conditions</td><td class="right">$0</td><td class="right">$0</td><td class="center">—</td><td><span class="badge gray">Initiated</span></td></tr>
+  </tbody></table>
+ </div>
 </div>
 
+<!-- ===== RFC COST RISK ===== -->
 <div class="section" id="rfc">
  <div class="kpis">
-  <div class="kpi danger"><div class="label">Open RFC Exposure</div><div class="value">$1,124,864</div><div class="sub">25 open RFCs · 2.5% of contract</div></div>
-  <div class="kpi warning"><div class="label">Pending Signature</div><div class="value">$401,977</div><div class="sub">13 RFCs</div></div>
-  <div class="kpi"><div class="label">In Review</div><div class="value">$98,530</div><div class="sub">8 RFCs</div></div>
-  <div class="kpi danger"><div class="label">In Revision</div><div class="value">$624,357</div><div class="sub">4 RFCs (re-pricing)</div></div>
-  <div class="kpi success"><div class="label">Approved (in COs)</div><div class="value">$2,254,797</div><div class="sub">Already absorbed</div></div>
+  <div class="kpi danger"><div class="label">Formally Pending Approval</div><div class="value">$942,832</div><div class="sub">3 RFCs submitted to Owner</div></div>
+  <div class="kpi warning"><div class="label">Holds &amp; ROM Pricing</div><div class="value">$130,762</div><div class="sub">~9 items in estimation</div></div>
+  <div class="kpi success"><div class="label">Total CO Approved</div><div class="value">$2,309,120</div><div class="sub">+$54,323 new &middot; PA#9</div></div>
+  <div class="kpi"><div class="label">Potential Contract Amt</div><div class="value">$46.26M</div><div class="sub">$46,263,211 if all approved</div></div>
+  <div class="kpi"><div class="label">Total RFC Exposure</div><div class="value">$3,379,011</div><div class="sub">Approved + pending + void</div></div>
  </div>
  <div class="charts">
-  <div class="card"><h3>Exposure by Status ($)</h3><div class="chart-wrap"><canvas id="rfcBar"></canvas></div></div>
+  <div class="card"><h3>Open Exposure by Status ($) — as of RFC Log 6/17/26</h3><div class="chart-wrap"><canvas id="rfcBar"></canvas></div></div>
   <div class="card"><h3>Open Exposure Distribution</h3><div class="chart-wrap"><canvas id="rfcDonut"></canvas></div></div>
  </div>
- <div class="card full"><h3>Approved / Pending Signature</h3><table><thead><tr><th>RFC #</th><th>Description</th><th class="right">Grand Total</th></tr></thead><tbody><tr><td>RFC#013</td><td>RFI#6 Elevator 2 Pit Discrepancy</td><td class="right">$2,618</td></tr><tr><td>RFC#036R1</td><td>CMU CJ's w/ Comparison Markups</td><td class="right">$3,693</td></tr><tr><td>RFC#044</td><td>RFI#36 Plumbing Penetrations & Rebar</td><td class="right">$29,470</td></tr><tr><td>RFC#048</td><td>Structural Steel Acceleration (Updated)</td><td class="right">$346,995</td></tr><tr><td>RFC#052R1</td><td>Structural Steel Accel. 5-Day Sched Credit</td><td class="right" style="color:#9e2a2b">-$23,334</td></tr><tr><td>RFC#061</td><td>RFI#74 Gas Meter Relocate</td><td class="right">$3,492</td></tr><tr><td>RFC#064</td><td>RFI#80/80.1 Level 1 Mech Grille</td><td class="right">$3,934</td></tr><tr><td>RFC#070</td><td>RFI#92 & 97 Door Frame Expedite</td><td class="right">$4,774</td></tr><tr><td>RFC#073</td><td>RFI#98 Kitchen 210 Wall Type</td><td class="right">$18,647</td></tr><tr><td>RFC#088</td><td>RFI#99 Acoustic Wall Panel</td><td class="right">$16,366</td></tr><tr><td>RFC#090</td><td>RFI#144 Storefront Low-E Change</td><td class="right">$2,579</td></tr><tr><td>RFC#100</td><td>RFI#142 Impact Resistant Gyp</td><td class="right">$1,177</td></tr><tr><td>RFC#101</td><td>RFI#78 Plumbing Fixture Clarifications</td><td class="right" style="color:#9e2a2b">-$8,434</td></tr><tr style="font-weight:700;background:#eef2f7"><td colspan="2">Subtotal (13)</td><td class="right">$401,977</td></tr></tbody></table></div>
- <div class="card full"><h3>In Review</h3><table><thead><tr><th>RFC #</th><th>Description</th><th class="right">Grand Total</th></tr></thead><tbody><tr><td>RFC#050</td><td>PGE Design Changes - Added Primary</td><td class="right">$32,148</td></tr><tr><td>RFC#085</td><td>RFI#117 Coiling Door Controller</td><td class="right">$1,085</td></tr><tr><td>RFC#091</td><td>Wind Delays 3.24.26</td><td class="right">$4,916</td></tr><tr><td>RFC#096</td><td>RFI#135 HMD & Frame Submittal Changes</td><td class="right">$2,480</td></tr><tr><td>RFC#099</td><td>FR-1 Credit</td><td class="right" style="color:#9e2a2b">-$3,270</td></tr><tr><td>RFC#104</td><td>RFI#154 Duct Liner</td><td class="right">$26,717</td></tr><tr><td>RFC#108</td><td>CMU Rain Delays 4.21-4.22.26</td><td class="right">$9,328</td></tr><tr><td>RFC#109</td><td>Elevator Tariffs</td><td class="right">$25,126</td></tr><tr style="font-weight:700;background:#eef2f7"><td colspan="2">Subtotal (8)</td><td class="right">$98,530</td></tr></tbody></table></div>
- <div class="card full"><h3>In Revision</h3><table><thead><tr><th>RFC #</th><th>Description</th><th class="right">Grand Total</th></tr></thead><tbody><tr><td>RFC#057</td><td>Bulletin #2 & RFI#118 Clarifications</td><td class="right">$8,545</td></tr><tr><td>RFC#077</td><td>Elevator Steel Changes</td><td class="right">$16,315</td></tr><tr><td>RFC#083</td><td>RFI#112 MEP Steel Support at Roof</td><td class="right">$181,864</td></tr><tr><td>RFC#092</td><td>Truss & Girder Design</td><td class="right">$417,633</td></tr><tr style="font-weight:700;background:#eef2f7"><td colspan="2">Subtotal (4)</td><td class="right">$624,357</td></tr></tbody></table>
-  <div class="footnote">Grand totals extracted from RFC PDF cover sheets. Organized by source subfolder. RFC#091 also present in the In-Revision folder (counted once, under In Review). RFI_112 narrative excluded (no priced total).</div></div>
+ <div class="card full"><h3>Formally Pending Owner Decision (In Revision / Sent to Owner) — RFC Log 6/17/26</h3>
+  <table><thead><tr><th>RFC #</th><th>Description</th><th>Current Status</th><th class="right">Grand Total</th></tr></thead>
+  <tbody>
+  <tr><td>RFC#057</td><td>Bulletin #2 &amp; RFI#118 Plumbing Clarifications</td><td>Revision Requested</td><td class="right">$343,295</td></tr>
+  <tr><td>RFC#083</td><td>RFI#112 MEP Steel Support at Roof</td><td>Revision Requested</td><td class="right">$181,904</td></tr>
+  <tr><td>RFC#092</td><td>Truss &amp; Girder Design</td><td>Revision Requested</td><td class="right">$417,633</td></tr>
+  <tr style="font-weight:700;background:#eef2f7"><td colspan="3">Subtotal — Formally Pending (3 RFCs)</td><td class="right">$942,832</td></tr>
+  </tbody></table>
+  <div class="footnote">RFC#057 amount deduced from RFC Log total ($942,832 less RFC#083 $181,904 and RFC#092 $417,633). RFC#077 (Elevator Steel, $16,315) also in revision but not yet in formal pending total.</div>
+ </div>
+ <div class="card full"><h3>Holds &amp; ROM Pricing — Not Yet Formally Submitted</h3>
+  <table><thead><tr><th>RFC #</th><th>Description</th><th>Status</th><th class="right">ROM Amount</th></tr></thead>
+  <tbody>
+  <tr><td>RFC#050</td><td>PGE Design Update - Added Primary</td><td>Owner Reviewing</td><td class="right">$32,148</td></tr>
+  <tr><td>RFC#105</td><td>Acoustic Lounge Stick Pin/Lay In</td><td>ROM Pricing</td><td class="right">$35,870 / $43,635</td></tr>
+  <tr><td>RFC#119</td><td>Gas Optic Linear Split</td><td>Owner Request</td><td class="right">$12,738</td></tr>
+  <tr><td>RFC#039</td><td>Truss Girder Connection Details</td><td>Pending Estimate</td><td class="right">$16,534</td></tr>
+  <tr><td>RFC#128</td><td>VESDA Updates 01</td><td>Pending Estimate</td><td class="right">$6,897</td></tr>
+  <tr><td>RFC#129</td><td>Start #8 Change to Graded</td><td>Pending Estimate</td><td class="right">$34,329</td></tr>
+  <tr><td>Various</td><td>Acoustical SC-1 &amp; other ROM items</td><td>ROM Pricing</td><td class="right">~$32,418 est.</td></tr>
+  <tr style="font-weight:700;background:#eef2f7"><td colspan="3">Subtotal — Holds &amp; ROM</td><td class="right">~$130,762</td></tr>
+  </tbody></table>
+ </div>
+ <div class="card full"><h3>Active Estimation — Pending Estimate (RFC Log 6/17/26 shows 30+ items pending pricing)</h3>
+  <table><thead><tr><th>RFC Range</th><th>Description</th><th>Status</th></tr></thead>
+  <tbody>
+  <tr><td>RFC#110–#142</td><td>New RFCs opened since PA#8 — includes Acoustic Lounge, HVAC Damper, Camera Heights, Exterior Metal Flashing, L2 J-Hook, FL-02 Location, Panel Coordination, HVAC Access Doors, L1 Artist Restroom, 126 Slab Depression, Bent Plate, Nitrogen Generator, Acoustical Panel Theater, Confirming HVAC Equipment Wiring, Drape Support Track, AHUL Corner Drain, AHU Supply Duct, Canopy, Joist Spacing, Refrigerant Concentration, and others</td><td>Pending Estimate</td></tr>
+  <tr><td>RFC#074, #078, #079, #080</td><td>Earlier RFCs still in estimation — Truss/Girder, Salmon Pump, Max/Min Details, 1 Duct Penetration</td><td>Pending Estimate</td></tr>
+  </tbody></table>
+  <div class="footnote">RFC Log dated 6/17/2026. TOTAL REJECTED/VOID: $129,059. Contract summary: Original $43,011,259 + Approved COs $2,309,120 = Revised $45,320,379 | Potential $46,263,211 (includes $942,832 pending).</div>
+ </div>
+</div>
+
+<!-- ===== BUY OUT LOG ===== -->
+<div class="section" id="buyout">
+ <div class="kpis">
+  <div class="kpi"><div class="label">GMP Budget (Original)</div><div class="value">$33.89M</div><div class="sub">$33,887,826</div></div>
+  <div class="kpi success"><div class="label">Sub Total (New GMP / Final)</div><div class="value">$33.52M</div><div class="sub">$33,524,613</div></div>
+  <div class="kpi success"><div class="label">Net Variance</div><div class="value">($363,193)</div><div class="sub">Savings · &minus;1.07% below GMP</div></div>
+  <div class="kpi"><div class="label">Scope Coverage</div><div class="value">52 Trades</div><div class="sub">Div 2–33 buyout complete</div></div>
+  <div class="kpi danger"><div class="label">Overrun Trades</div><div class="value">9</div><div class="sub">$633,387 gross overruns</div></div>
+  <div class="kpi success"><div class="label">Savings Trades</div><div class="value">23</div><div class="sub">$996,580 gross savings</div></div>
+ </div>
+ <div class="charts">
+  <div class="card full"><h3>Buyout Variance by Trade (Sub Total &minus; GMP Budget · negative = savings)</h3>
+   <div class="chart-wrap-lg"><canvas id="buyoutVarChart"></canvas></div>
+  </div>
+ </div>
+ <div class="card full"><h3>Buyout Log Detail — All Divisions</h3>
+  <table><thead><tr><th>Description</th><th>Subcontractor</th><th class="right">Sub Total (New GMP)</th><th class="right">GMP Budget (Original)</th><th class="right">Delta (Sub &minus; GMP)</th></tr></thead>
+  <tbody>
+  <tr class="div-header"><td colspan="5">Division 2 — Sitework</td></tr>
+  <tr><td>Sitework</td><td>NB</td><td class="right">$38,500</td><td class="right">$33,800</td><td class="right overrun">+$4,700</td></tr>
+  <tr class="div-header"><td colspan="5">Division 3 — Concrete</td></tr>
+  <tr><td>Concrete</td><td>CSL</td><td class="right">$3,961,218</td><td class="right">$3,783,365</td><td class="right overrun">+$177,853</td></tr>
+  <tr class="div-header"><td colspan="5">Division 4 — Masonry</td></tr>
+  <tr><td>Masonry</td><td>Klinger</td><td class="right">$1,508,664</td><td class="right">$1,492,366</td><td class="right overrun">+$16,298</td></tr>
+  <tr class="div-header"><td colspan="5">Division 5 — Metals</td></tr>
+  <tr><td>Structural Steel Framing</td><td>AIG</td><td class="right">$4,641,009</td><td class="right">$4,672,268</td><td class="right savings">&minus;$31,259</td></tr>
+  <tr><td>Steel Stairs</td><td>Solid Form</td><td class="right">$605,492</td><td class="right">$605,492</td><td class="right">$0</td></tr>
+  <tr><td>Railings</td><td>Solid Form</td><td class="right">$482,478</td><td class="right">$493,880</td><td class="right savings">&minus;$11,402</td></tr>
+  <tr><td>Misc Steel Fabrications</td><td>Solid Form</td><td class="right">$1,131,844</td><td class="right">$992,334</td><td class="right overrun">+$139,510</td></tr>
+  <tr class="div-header"><td colspan="5">Division 7 — Thermal / Moisture Protection</td></tr>
+  <tr><td>Fluid Applied Waterproofing</td><td>Snyder</td><td class="right">$217,669</td><td class="right">$236,455</td><td class="right savings">&minus;$18,786</td></tr>
+  <tr><td>Bentonite Waterproofing</td><td>Sawtooch</td><td class="right">$31,090</td><td class="right">$31,090</td><td class="right">$0</td></tr>
+  <tr><td>Metal Wall Panels</td><td>Exteriors</td><td class="right">$295,951</td><td class="right">$325,427</td><td class="right savings">&minus;$29,476</td></tr>
+  <tr><td>Traffic Coatings</td><td>Snyder</td><td class="right">$7,098</td><td class="right">$24,050</td><td class="right savings">&minus;$16,952</td></tr>
+  <tr><td>Insulation</td><td>WPI</td><td class="right">$645,497</td><td class="right">$607,987</td><td class="right overrun">+$37,510</td></tr>
+  <tr><td>Membrane Roofing</td><td>Snyder</td><td class="right">$673,502</td><td class="right">$674,877</td><td class="right savings">&minus;$1,375</td></tr>
+  <tr><td>Sheetmetal Flashing &amp; Trim</td><td>Exteriors</td><td class="right">$158,772</td><td class="right">$158,772</td><td class="right">$0</td></tr>
+  <tr><td>Roof Accessories</td><td>Snyder</td><td class="right">$9,803</td><td class="right">$39,279</td><td class="right savings">&minus;$29,476</td></tr>
+  <tr><td>Applied Fireproofing</td><td>Life Safety &amp; WPI</td><td class="right">$81,792</td><td class="right">$81,390</td><td class="right overrun">+$402</td></tr>
+  <tr><td>Firestopping</td><td>Hudson Bay-CSL</td><td class="right">$98,941</td><td class="right">$98,941</td><td class="right">$0</td></tr>
+  <tr class="div-header"><td colspan="5">Division 8 — Openings</td></tr>
+  <tr><td>Doors, Frames &amp; Hardware</td><td>WPI</td><td class="right">$620,769</td><td class="right">$613,016</td><td class="right overrun">+$7,753</td></tr>
+  <tr><td>Overhead Coiling Doors</td><td>Interior Tech</td><td class="right">$60,819</td><td class="right">$90,083</td><td class="right savings">&minus;$29,264</td></tr>
+  <tr><td>Storefronts</td><td>Dallas Glass</td><td class="right">$251,055</td><td class="right">$284,619</td><td class="right savings">&minus;$33,564</td></tr>
+  <tr><td>Mirrors</td><td>Dallas Glass</td><td class="right">$5,048</td><td class="right">$20,048</td><td class="right savings">&minus;$15,000</td></tr>
+  <tr class="div-header"><td colspan="5">Division 9 — Finishes</td></tr>
+  <tr><td>Gyp Assemblies &amp; Metal Stud</td><td>WPI</td><td class="right">$1,509,551</td><td class="right">$1,473,038</td><td class="right overrun">+$36,513</td></tr>
+  <tr><td>Tiling</td><td>Prestige</td><td class="right">$259,791</td><td class="right">$261,050</td><td class="right savings">&minus;$1,259</td></tr>
+  <tr><td>Specialty Ceilings</td><td>WPI</td><td class="right">$31,885</td><td class="right">$31,885</td><td class="right">$0</td></tr>
+  <tr><td>Flooring Treatments</td><td>CF&amp;I &amp; Consurco</td><td class="right">$369,947</td><td class="right">$347,032</td><td class="right overrun">+$22,915</td></tr>
+  <tr><td>Acoustic Wall Panels</td><td>WPI</td><td class="right">$218,571</td><td class="right">$218,571</td><td class="right">$0</td></tr>
+  <tr><td>Acoustic Insulation</td><td>WPI</td><td class="right">$494,150</td><td class="right">$494,150</td><td class="right">$0</td></tr>
+  <tr><td>Painting</td><td>Firyew</td><td class="right">$494,945</td><td class="right">$497,766</td><td class="right savings">&minus;$2,821</td></tr>
+  <tr><td>Wood Wall Panels</td><td>Uncommon</td><td class="right">$60,681</td><td class="right">$69,203</td><td class="right savings">&minus;$8,522</td></tr>
+  <tr class="div-header"><td colspan="5">Division 10 — Specialties</td></tr>
+  <tr><td>Building Signage</td><td>Sign Wizards</td><td class="right">$10,157</td><td class="right">$10,214</td><td class="right savings">&minus;$57</td></tr>
+  <tr><td>FRP</td><td>WPI</td><td class="right">$47,435</td><td class="right">$35,435</td><td class="right overrun">+$12,000</td></tr>
+  <tr><td>Accessories</td><td>Dindia</td><td class="right">$281,266</td><td class="right">$282,955</td><td class="right savings">&minus;$1,689</td></tr>
+  <tr class="div-header"><td colspan="5">Division 11 — Equipment</td></tr>
+  <tr><td>Loading Dock Equipment</td><td>Authority Dock &amp; Door</td><td class="right">$59,590</td><td class="right">$33,266</td><td class="right overrun">+$26,324</td></tr>
+  <tr><td>Appliances</td><td>Basco</td><td class="right">$24,933</td><td class="right">$59,930</td><td class="right savings">&minus;$34,997</td></tr>
+  <tr><td>Facility Fall Protection</td><td>Excalibur</td><td class="right">$40,100</td><td class="right">$59,379</td><td class="right savings">&minus;$19,279</td></tr>
+  <tr class="div-header"><td colspan="5">Division 12 — Furnishings</td></tr>
+  <tr><td>Window Treatment</td><td>All Trades</td><td class="right">$3,863</td><td class="right">$2,880</td><td class="right overrun">+$983</td></tr>
+  <tr><td>Casework &amp; Cabinetry</td><td>Uncommon</td><td class="right">$756,803</td><td class="right">$1,066,599</td><td class="right savings">&minus;$309,796</td></tr>
+  <tr class="div-header"><td colspan="5">Division 14 — Conveying Equipment</td></tr>
+  <tr><td>Conveying Equipment</td><td>Kone</td><td class="right">$505,431</td><td class="right">$476,091</td><td class="right overrun">+$29,340</td></tr>
+  <tr class="div-header"><td colspan="5">Division 21 — Fire Suppression</td></tr>
+  <tr><td>Fire Suppression</td><td>Red Hawk</td><td class="right">$397,735</td><td class="right">$453,482</td><td class="right savings">&minus;$55,747</td></tr>
+  <tr class="div-header"><td colspan="5">Division 22 — Plumbing</td></tr>
+  <tr><td>Plumbing</td><td>Tapani Plumbing</td><td class="right">$1,284,300</td><td class="right">$1,356,200</td><td class="right savings">&minus;$71,900</td></tr>
+  <tr class="div-header"><td colspan="5">Division 23 — HVAC</td></tr>
+  <tr><td>HVAC</td><td>American Heating</td><td class="right">$3,702,577</td><td class="right">$3,693,860</td><td class="right overrun">+$8,717</td></tr>
+  <tr class="div-header"><td colspan="5">Division 26 — Electrical</td></tr>
+  <tr><td>Electrical</td><td>EC Electrical</td><td class="right">$2,973,329</td><td class="right">$3,215,255</td><td class="right savings">&minus;$241,926</td></tr>
+  <tr class="div-header"><td colspan="5">Division 27 — Communications</td></tr>
+  <tr><td>Structured Cabling</td><td>EC Electrical</td><td class="right">$221,014</td><td class="right">$221,014</td><td class="right">$0</td></tr>
+  <tr><td>AV Systems</td><td>EC Electrical</td><td class="right">$236,016</td><td class="right">$236,016</td><td class="right">$0</td></tr>
+  <tr class="div-header"><td colspan="5">Division 28 — Electronic Safety &amp; Security</td></tr>
+  <tr><td>Electronic Safety &amp; Security</td><td>EC Electrical</td><td class="right">$464,771</td><td class="right">$389,132</td><td class="right overrun">+$75,639</td></tr>
+  <tr class="div-header"><td colspan="5">Division 31 — Earthwork</td></tr>
+  <tr><td>Earthwork (NB, incl. site maintenance)</td><td>NB / CSL</td><td class="right">$1,236,244</td><td class="right">$1,236,244</td><td class="right">$0</td></tr>
+  <tr><td>DSF Foundations (Keller, incl. site maintenance)</td><td>Keller / CSL</td><td class="right">$1,407,969</td><td class="right">$1,430,000</td><td class="right savings">&minus;$22,031</td></tr>
+  <tr class="div-header"><td colspan="5">Division 32 — Exterior Improvements</td></tr>
+  <tr><td>Asphalt Paving</td><td>Kodiak</td><td class="right">$75,600</td><td class="right">$75,600</td><td class="right">$0</td></tr>
+  <tr><td>Site Concrete</td><td>RLC</td><td class="right">$135,271</td><td class="right">$145,273</td><td class="right savings">&minus;$10,002</td></tr>
+  <tr><td>Site Improvements</td><td>Solid Form</td><td class="right">$149,660</td><td class="right">$149,440</td><td class="right overrun">+$220</td></tr>
+  <tr><td>Landscape</td><td>Snyder</td><td class="right">$340,637</td><td class="right">$303,927</td><td class="right overrun">+$36,710</td></tr>
+  <tr class="div-header"><td colspan="5">Division 33 — Utilities</td></tr>
+  <tr><td>Utilities (Water / Sanitary / Electrical)</td><td>NB</td><td class="right">$203,400</td><td class="right">$203,400</td><td class="right">$0</td></tr>
+  <tr class="total-row"><td colspan="2"><strong>TOTAL</strong></td><td class="right"><strong>$33,524,613</strong></td><td class="right"><strong>$33,887,826</strong></td><td class="right savings"><strong>&minus;$363,193</strong></td></tr>
+  </tbody></table>
+  <div class="footnote">Sub Total = final contracted (New GMP) · GMP Budget Value = original budget · Delta = Sub &minus; GMP (negative = savings, green; positive = overrun, red). Site maintenance costs for Div 31 allocated to respective trade budgets. Div 11 sub total adjusted $100 for rounding. Yellow-highlighted items in source PDF indicate escalation risk.</div>
+ </div>
 </div>
 
 <script>
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
- t.classList.add('active'); document.getElementById(t.dataset.tab).classList.add('active');
+ t.classList.add('active');document.getElementById(t.dataset.tab).classList.add('active');
 });
 const usd=v=>'$'+(v/1e6).toFixed(2)+'M';
 const C={primary:'#1f3a5f',accent:'#3a7ca5',success:'#2c8a3e',warning:'#e09f3e',danger:'#9e2a2b'};
-new Chart(cumChart,{type:'line',data:{labels:["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],datasets:[{label:'Completed & Stored',data:[636962, 2303286.46, 4317062.46, 5825247.46, 7593909.46, 12104372.46, 13495870.77, 15873608.77],borderColor:C.accent,backgroundColor:'rgba(58,124,165,.15)',fill:true,tension:.3,pointRadius:4}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:usd}}}}});
-new Chart(monthChart,{type:'bar',data:{labels:["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],datasets:[{label:'Payment',data:[605113.9, 1583008.24, 1913087.2, 1432775.75, 1680228.9, 4329171.7, 1277691.54, 2258851.1],backgroundColor:C.primary}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:usd}}}}});
-new Chart(sCurve,{type:'line',data:{labels:["Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26", "Sep 26", "Oct 26", "Nov 26", "Dec 26", "Jan 27", "Feb 27", "Mar 27", "Apr 27", "May 27", "Jun 27", "Jul 27"],datasets:[
- {label:'Planned %',data:[1, 3, 6.5, 10.5, 15.5, 21, 27.5, 35, 43, 51, 59, 66, 72, 78, 83, 87.5, 91, 94, 96.5, 98, 99, 99.7, 100],borderColor:C.warning,borderDash:[6,4],tension:.3,pointRadius:0},
- {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],borderColor:C.success,backgroundColor:'rgba(44,138,62,.12)',fill:true,tension:.3,pointRadius:3,spanGaps:false}
-]},options:{maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>v+'%'},max:100}}}});
-new Chart(pctBar,{type:'bar',data:{labels:["Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26"],datasets:[
- {label:'Planned %',data:[1, 3, 6.5, 10.5, 15.5, 21, 27.5, 35],backgroundColor:C.warning},
- {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07],backgroundColor:C.success}
-]},options:{maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>v+'%'}}}}});
+
+new Chart(cumChart,{type:'line',data:{labels:["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May"],datasets:[{label:'Completed & Stored',data:[636962,2303286.46,4317062.46,5825247.46,7593909.46,12104372.46,13495870.77,15873608.77,18020746.77],borderColor:C.accent,backgroundColor:'rgba(58,124,165,.15)',fill:true,tension:.3,pointRadius:4},{label:'Cumulative Paid',data:[605113.9,2188122.14,4101209.34,5533985.09,7214213.99,11543385.69,12821077.23,15079928.33,17191209.43],borderColor:C.success,backgroundColor:'rgba(44,138,62,.08)',fill:true,tension:.3,pointRadius:4}]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:usd}}}}});
+
+new Chart(monthChart,{type:'bar',data:{labels:["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May"],datasets:[{label:'Monthly Payment',data:[605113.9,1583008.24,1913087.2,1432775.75,1680228.9,4329171.7,1277691.54,2258851.1,2111281.10],backgroundColor:[C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.accent]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:usd}}}}});
+
+new Chart(sCurve,{type:'line',data:{labels:["Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26","May 26","Jun 26","Jul 26","Aug 26","Sep 26","Oct 26","Nov 26","Dec 26","Jan 27","Feb 27","Mar 27","Apr 27","May 27","Jun 27","Jul 27"],datasets:[
+ {label:'Planned %',data:[1,3,6.5,10.5,15.5,21,27.5,35,43,51,59,66,72,78,83,87.5,91,94,96.5,98,99,99.7,100],borderColor:C.warning,borderDash:[6,4],tension:.3,pointRadius:0},
+ {label:'Actual %',data:[1.48,5.29,9.84,13.23,16.84,26.84,29.91,35.07,39.76,null,null,null,null,null,null,null,null,null,null,null,null,null,null],borderColor:C.success,backgroundColor:'rgba(44,138,62,.12)',fill:true,tension:.3,pointRadius:3,spanGaps:false}
+]},options:{maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>v+'%'},max:100}},plugins:{legend:{position:'bottom'}}}});
+
+new Chart(pctBar,{type:'bar',data:{labels:["Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26","May 26"],datasets:[
+ {label:'Planned %',data:[1,3,6.5,10.5,15.5,21,27.5,35,43],backgroundColor:C.warning},
+ {label:'Actual %',data:[1.48,5.29,9.84,13.23,16.84,26.84,29.91,35.07,39.76],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger]}
+]},options:{maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>v+'%'}}},plugins:{legend:{position:'bottom'}}}});
+
 new Chart(gauge,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],datasets:[{data:[445614,11482,347396],backgroundColor:[C.warning,C.accent,C.success]}]},options:{maintainAspectRatio:false,circumference:180,rotation:270,cutout:'65%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
-new Chart(burn,{type:'line',data:{labels:["Start", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8"],datasets:[{label:'Remaining Contingency',data:[804492, 804492, 800230, 773280, 734661, 638359, 632149, 624994, 358878],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
-new Chart(rfcBar,{type:'bar',data:{labels:['Pending Sig','In Review','In Revision'],datasets:[{label:'Exposure',data:[401977,98530,624357],backgroundColor:[C.warning,C.accent,C.danger]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
-new Chart(rfcDonut,{type:'doughnut',data:{labels:['Pending Sig','In Review','In Revision'],datasets:[{data:[401977,98530,624357],backgroundColor:[C.warning,C.accent,C.danger]}]},options:{maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
+
+new Chart(burn,{type:'line',data:{labels:["Start","PA1","PA2","PA3","PA4","PA5","PA6","PA7","PA8","PA9"],datasets:[{label:'Remaining Contingency',data:[804492,804492,800230,773280,734661,638359,632149,624994,358878,358878],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
+
+new Chart(rfcBar,{type:'bar',data:{labels:['Pending Approval','Holds & ROM'],datasets:[{label:'Exposure',data:[942832,130762],backgroundColor:[C.danger,C.warning]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
+
+new Chart(rfcDonut,{type:'doughnut',data:{labels:['Pending Approval','Holds & ROM'],datasets:[{data:[942832,130762],backgroundColor:[C.danger,C.warning]}]},options:{maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
+
+(function(){
+ const el=document.getElementById('buyoutVarChart');
+ if(!el)return;
+ const labels=['Casework & Cabinetry','Electrical','Plumbing','Fire Suppression','Appliances','Storefronts','Structural Steel','Metal Wall Panels','Roof Accessories','Coiling Doors','DSF Foundations','Fall Protection','Fluid Waterproofing','Traffic Coatings','Mirrors','Railings','Site Concrete','Wood Wall Panels','Painting','Accessories','Membrane Roofing','Tiling','Building Signage','Site Improvements','Applied Fireproofing','Window Treatment','Sitework','Doors/Frames/HW','HVAC','FRP','Masonry','Flooring Treatments','Loading Dock','Conveying Equipment','Gyp Assemblies','Landscape','Insulation','Div 28 E&S','Misc Steel','Concrete'];
+ const vals=[-309796,-241926,-71900,-55747,-34997,-33564,-31259,-29476,-29476,-29264,-22031,-19279,-18786,-16952,-15000,-11402,-10002,-8522,-2821,-1689,-1375,-1259,-57,220,402,983,4700,7753,8717,12000,16298,22915,26324,29340,36513,36710,37510,75639,139510,177853];
+ const colors=vals.map(v=>v<0?'rgba(44,138,62,0.82)':'rgba(158,42,43,0.82)');
+ new Chart(el,{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:colors,borderWidth:0}]},options:{indexAxis:'y',maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const v=c.raw;return(v<0?'Savings: -$':'Overrun: +$')+Math.abs(v).toLocaleString();}}}},scales:{x:{ticks:{callback:v=>(v<0?'-$':'+$')+Math.abs(v/1000).toFixed(0)+'K'},grid:{color:'rgba(0,0,0,.05)'}},y:{ticks:{font:{size:11}}}}}});
+})();
 </script>
 </body></html>
