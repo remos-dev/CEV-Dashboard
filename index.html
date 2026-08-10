@@ -57,12 +57,13 @@ tr:nth-child(even){background:#fafbfd;}tr:hover{background:#eef2f7;}
   <div class="kpi"><div class="label">Contract to Date</div><div class="value">$45.40M</div><div class="sub">$45,403,380</div></div>
   <div class="kpi success"><div class="label">Completed &amp; Stored</div><div class="value">$20.13M</div><div class="sub">44.34% complete</div></div>
   <div class="kpi"><div class="label">Total Paid (cumulative)</div><div class="value">$20.13M</div><div class="sub">11 pay apps</div></div>
-  <div class="kpi success"><div class="label">Retainage Held</div><div class="value">$0.00</div><div class="sub">Fully released &middot; $871,605 in PA#11</div></div>
+  <div class="kpi success"><div class="label">Retainage Held</div><div class="value">$0.00</div><div class="sub">Released $871,605 &mdash; against pre-July work</div></div>
   <div class="kpi danger"><div class="label">Balance to Finish</div><div class="value">$25.27M</div><div class="sub">$25,270,106</div></div>
+  <div class="kpi warning"><div class="label">July Work in Place</div><div class="value">$1.02M</div><div class="sub">$1,022,653 &mdash; excl. retainage release</div></div>
  </div>
  <div class="charts">
   <div class="card"><h3>Cumulative Completed &amp; Stored vs Paid ($)</h3><div class="chart-wrap"><canvas id="cumChart"></canvas></div></div>
-  <div class="card"><h3>Monthly Payment ($)</h3><div class="chart-wrap"><canvas id="monthChart"></canvas></div></div>
+  <div class="card"><h3>Monthly Payment ($) &mdash; Progress vs Retainage Release</h3><div class="chart-wrap"><canvas id="monthChart"></canvas></div></div>
  </div>
  <div class="card full"><h3>Pay Application Summary</h3>
   <table><thead><tr><th>PA #</th><th>Period Through</th><th class="right">Contract to Date</th><th class="right">Completed &amp; Stored</th><th class="right">% Complete</th><th class="right">Current Payment</th><th class="right">Balance to Finish</th></tr></thead>
@@ -94,6 +95,17 @@ tr:nth-child(even){background:#fafbfd;}tr:hover{background:#eef2f7;}
  <div class="charts">
   <div class="card full"><h3>S-Curve &mdash; Planned vs Actual % Complete</h3><div class="chart-wrap"><canvas id="sCurve"></canvas></div></div>
   <div class="card full"><h3>Planned vs Actual % (through July 2026)</h3><div class="chart-wrap"><canvas id="pctBar"></canvas></div></div>
+ </div>
+ <div class="card full"><h3>Basis of Measurement &mdash; Retainage Treatment</h3>
+  <table><thead><tr><th>Question</th><th>Answer</th></tr></thead>
+  <tbody>
+  <tr><td>What drives Actual %?</td><td><strong>Completed &amp; Stored to Date &divide; Contract Sum to Date</strong> (G703 REPORT TOTALS col. 5 &divide; col. 1). This is work in place, not cash.</td></tr>
+  <tr><td>Does the PA#11 retainage release affect Actual %?</td><td><strong>No.</strong> Retainage is col. 8 of the same row &mdash; a payment withholding, independent of work in place. Re-running PA#11 with retainage still held at PA#10&rsquo;s 4.5608% rate gives the identical 44.34%.</td></tr>
+  <tr><td>What work does the $871,605.49 release relate to?</td><td><strong>Prior periods.</strong> It accrued at 4.5608% against the $19,110,620.77 completed through 6/30/2026. It contains <strong>zero July production</strong>.</td></tr>
+  <tr><td>What moved the curve in July?</td><td><strong>$1,022,653</strong> of July work in place (G703 &ldquo;This Period&rdquo;), lifting the curve 42.17% &rarr; 44.34% (+2.17 pp). Gross effect was +2.25 pp, diluted slightly by the +$83,001 OCO#10 contract growth in the denominator.</td></tr>
+  <tr><td>Where does the release appear?</td><td>Only in cash measures: the Monthly Payment chart (shown as a separate stacked band) and the Current Payment column. It is excluded from every percent-complete and variance figure.</td></tr>
+  </tbody></table>
+  <div class="footnote">Verified against the signed G702/G703 for PA#8 through PA#11. Retainage held: PA#8 $793,680.44 &middot; PA#9 $829,537.34 &middot; PA#10 $871,605.49 &middot; PA#11 $0.00. Completed &amp; Stored is monotonic across all four and unaffected by the release.</div>
  </div>
  <div class="card full"><h3>Variance Detail</h3>
   <table><thead><tr><th>Period</th><th class="right">Planned %</th><th class="right">Actual %</th><th class="right">Variance</th><th class="right">Actual $</th></tr></thead>
@@ -390,7 +402,10 @@ new Chart(cumChart,{type:'line',data:{labels:["Sep","Oct","Nov","Dec","Jan","Feb
  {label:'Cumulative Paid',data:[605113.9,2188122.14,4101209.34,5533985.09,7214213.99,11543385.69,12821077.23,15079928.33,17191209.43,18239015.28,20133273.77],borderColor:C.success,backgroundColor:'rgba(44,138,62,.08)',fill:true,tension:.3,pointRadius:4}
 ]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:usd}}}}});
 
-new Chart(monthChart,{type:'bar',data:{labels:["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"],datasets:[{label:'Monthly Payment',data:[605113.9,1583008.24,1913087.2,1432775.75,1680228.9,4329171.7,1277691.54,2258851.1,2111281.10,1047805.85,1894258.49],backgroundColor:[C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.primary,C.accent]}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:usd}}}}});
+new Chart(monthChart,{type:'bar',data:{labels:["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul"],datasets:[
+ {label:'Progress payment (work in place this period)',data:[605113.9,1583008.24,1913087.2,1432775.75,1680228.9,4329171.7,1277691.54,2258851.1,2111281.10,1047805.85,1022653],backgroundColor:C.primary},
+ {label:'Retainage release (work in place through Jun 30)',data:[0,0,0,0,0,0,0,0,0,0,871605.49],backgroundColor:C.warning}
+]},options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.raw.toLocaleString()}}},scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:usd}}}}});
 
 new Chart(sCurve,{type:'line',data:{labels:["Sep 25","Oct 25","Nov 25","Dec 25","Jan 26","Feb 26","Mar 26","Apr 26","May 26","Jun 26","Jul 26","Aug 26","Sep 26","Oct 26","Nov 26","Dec 26","Jan 27","Feb 27","Mar 27","Apr 27","May 27","Jun 27","Jul 27"],datasets:[
  {label:'Planned %',data:[1,3,6.5,10.5,15.5,21,27.5,35,43,51,59,66,72,78,83,87.5,91,94,96.5,98,99,99.7,100],borderColor:C.warning,borderDash:[6,4],tension:.3,pointRadius:0},
