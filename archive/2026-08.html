@@ -78,6 +78,9 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
   <div class="card"><h3>S-curve &mdash; P6 baseline vs CCI projection vs actual</h3>
     <div class="chart"><canvas id="scurve"></canvas></div></div>
 
+  <div class="card"><h3>Planned vs actual % &mdash; through August 2026</h3>
+    <div class="chart"><canvas id="pctBar"></canvas></div></div>
+
   <div class="card"><h3>Pay application summary</h3><div class="scroll"><table>
     <thead><tr><th>PA</th><th>Through</th><th>Contract</th><th>Completed</th>
     <th>% Compl</th><th>Retainage</th><th>Payment</th><th>Balance</th></tr></thead>
@@ -86,9 +89,17 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
   <div class="card"><h3>Contingency &mdash; used, booked, remaining</h3>
     <div class="chart"><canvas id="cont"></canvas></div></div>
 
+  <div class="card"><h3>Contingency burn-down &mdash; remaining by pay app</h3><div class="chart"><canvas id="burn"></canvas></div><p class="src">Carried from the 2026-08-24 contingency log; the last point is checked against the tracker.</p></div>
+
   <div class="card"><h3>Open RFC exposure by status</h3><div class="scroll"><table>
     <thead><tr><th>Status</th><th>Count</th><th>Amount</th></tr></thead>
     <tbody><tr><td>Approved (Incorporated into COs)</td><td>57</td><td>$2,480,961</td></tr><tr><td>Formally Pending (Sent to Owner / Revision Requested)</td><td>9</td><td>$622,660</td></tr><tr><td>Holds & ROM Pricing (per RFC Log subtotal)</td><td>8</td><td>$109,337</td></tr><tr><td>In Active Estimation (Pending Estimate, unpriced)</td><td>18</td><td>$0</td></tr></tbody></table></div></div>
+
+  <div class="card"><h3>Open exposure by status</h3>
+    <div class="chart"><canvas id="rfcBar"></canvas></div></div>
+
+  <div class="card"><h3>Open exposure distribution</h3>
+    <div class="chart"><canvas id="rfcDonut"></canvas></div></div>
 
   <div class="card"><h3>Buyout variance by trade
     &mdash; negative is savings</h3>
@@ -145,6 +156,22 @@ new Chart(cont,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],
  datasets:[{data:[676463.0, 11481.0, 116548.0],
  backgroundColor:[C.warning,C.accent,C.success]}]},
  options:{maintainAspectRatio:false,circumference:180,rotation:270,cutout:'65%',
+ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{
+ label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
+new Chart(pctBar,{type:'bar',data:{labels:["Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26"],datasets:[
+ {label:'Planned %',data:[1.0, 3.0, 6.5, 10.5, 15.5, 21.0, 27.5, 35.0, 43.0, 51.0, 59.0, 66.0],backgroundColor:C.warning},
+ {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, 39.76, 42.17, 44.34, 46.84],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger,C.danger,C.danger,C.danger]}]},
+ options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
+ scales:{y:{ticks:{callback:v=>v+'%'}}}}});
+new Chart(burn,{type:'line',data:{labels:["Start", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12"],datasets:[{label:'Remaining',data:[804492, 804492, 800230, 773280, 734661, 638359, 632149, 624994, 347396, 340226, 143514, 119714, 116548],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toLocaleString()}}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
+new Chart(rfcBar,{type:'bar',data:{labels:["Formally Pending", "Holds & ROM Pricing"],datasets:[
+ {label:'Exposure',data:[622660.0, 109337.0],backgroundColor:[C.danger,C.warning,C.accent]}]},
+ options:{maintainAspectRatio:false,plugins:{legend:{display:false},
+ tooltip:{callbacks:{label:c=>'$'+c.raw.toLocaleString()}}},
+ scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
+new Chart(rfcDonut,{type:'doughnut',data:{labels:["Formally Pending", "Holds & ROM Pricing"],datasets:[
+ {data:[622660.0, 109337.0],backgroundColor:[C.danger,C.warning,C.accent]}]},
+ options:{maintainAspectRatio:false,cutout:'55%',
  plugins:{legend:{position:'bottom'},tooltip:{callbacks:{
  label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
 (function(){const v=[-309796, -241926, -71900, -55747, -34997, -33564, -31259, -29476, -29476, -29264, -22031, -19279, -18786, -16952, -15000, -11402, -10002, -8522, -2821, -1689, -1375, -1259, -57, 220, 402, 983, 4700, 7753, 8717, 12000, 16298, 22915, 26324, 29340, 36513, 36710, 37510, 75639, 139510, 177853];
