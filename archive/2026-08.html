@@ -158,10 +158,11 @@ new Chart(cum,{type:'line',data:{labels:["PA1", "PA2", "PA3", "PA4", "PA5", "PA6
  options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
  scales:{y:{ticks:{callback:usd}}}}});
 new Chart(mon,{type:'bar',data:{labels:["PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12"],datasets:[
- {label:'Payment this period',data:[605113.9, 1583008.24, 1913087.2, 1432775.75, 1680228.9, 4329171.7, 1277691.54, 2258851.1, 2111281.1, 1047805.85, 1894258.49, 1176159.0],backgroundColor:C.primary}]},
- options:{maintainAspectRatio:false,plugins:{legend:{display:false},
- tooltip:{callbacks:{label:c=>'$'+c.raw.toLocaleString()}}},
- scales:{y:{ticks:{callback:usd}}}}});
+ {label:'Work billed this period',data:[605113.9, 1583008.24, 1913087.2, 1432775.75, 1680228.9, 4329171.7, 1277691.54, 2258851.1, 2111281.1, 1047805.85, 1022653.0, 1176159.0],backgroundColor:C.primary},
+ {label:'Retention released',data:[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 871605.49, 0],backgroundColor:C.success}]},
+ options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'},
+ tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.raw.toLocaleString()}}},
+ scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:usd}}}}});
 new Chart(scurve,{type:'line',data:{labels:["Sep 2025", "Oct 2025", "Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026", "Dec 2026", "Jan 2027", "Feb 2027", "Mar 2027", "Apr 2027", "May 2027", "Jun 2027", "Jul 2027"],datasets:[
  {label:'Planned %',data:[1.0, 3.0, 6.5, 10.5, 15.5, 21.0, 27.5, 35.0, 43.0, 51.0, 59.0, 66.0, 72.0, 78.0, 83.0, 87.5, 91.0, 94.0, 96.5, 98.0, 99.0, 99.7, 100.0],borderColor:C.warning,borderDash:[6,4],
   tension:.3,pointRadius:0},
