@@ -62,7 +62,7 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <header>
   <h1>CEV (Steelhead) &mdash; Pay App Dashboard</h1>
   <p>Through Pay App #13, period ending September 30, 2026
-     &middot; generated September 30, 2026 by <code>payapps</code></p>
+     &middot; generated October 2, 2026 by <code>payapps</code></p>
 </header>
 <div class="wrap">
   <div class="kpis">
@@ -104,8 +104,8 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <section class="panel" id="tab-schedule">
   <div class="kpis inline">
     <div class="kpi"><div class="l">Business days to TCO</div>
-      <div class="v" id="tcoDays">196</div>
-      <div class="s" id="tcoSub">to July 9, 2027 &middot; 282 calendar days
+      <div class="v" id="tcoDays">194</div>
+      <div class="s" id="tcoSub">to July 9, 2027 &middot; 280 calendar days
         &middot; 6 project holidays skipped</div></div>
     <div class="kpi"><div class="l">Contractual milestone</div>
       <div class="v" style="font-size:15px;line-height:1.35">Guaranteed Substantial Completion / TCO Completion</div>
@@ -191,6 +191,7 @@ new Chart(cont,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],
  label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
 new Chart(pctBar,{type:'bar',data:{labels:["Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26", "Sep 26"],datasets:[
  {label:'Planned %',data:[1.0, 3.0, 6.5, 10.5, 15.5, 21.0, 27.5, 35.0, 43.0, 51.0, 59.0, 66.0, 72.0],backgroundColor:C.warning},
+ {label:'CCI projection %',data:[1.48, 5.29, 9.84, 12.61, 16.23, 26.23, 29.3, 34.23, 38.92, 41.14, 44.37, 48.89, 53.17],backgroundColor:'#7b4fa8'},
  {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, 39.76, 42.17, 44.34, 46.84, 49.33],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger,C.danger,C.danger,C.danger,C.danger]}]},
  options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
  scales:{y:{ticks:{callback:v=>v+'%'}}}}});
