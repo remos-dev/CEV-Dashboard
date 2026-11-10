@@ -62,7 +62,7 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <header>
   <h1>CEV (Steelhead) &mdash; Pay App Dashboard</h1>
   <p>Through Pay App #14, period ending October 31, 2026
-     &middot; generated November 8, 2026 by <code>payapps</code></p>
+     &middot; generated November 10, 2026 by <code>payapps</code></p>
 </header>
 <div class="wrap">
   <div class="kpis">
@@ -106,9 +106,13 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <section class="panel" id="tab-schedule">
   <div class="kpis inline">
     <div class="kpi"><div class="l">Business days to TCO</div>
-      <div class="v" id="tcoDays">169</div>
-      <div class="s" id="tcoSub">to July 9, 2027 &middot; 243 calendar days
-        &middot; 6 project holidays skipped</div></div>
+      <div class="v" id="tcoDays">167</div>
+      <div class="s" id="tcoSub">to July 9, 2027 &middot; 241 calendar days
+        &middot; 6 project holidays skipped</div>
+      <div class="s fc" title="Colas P6, CEV - Full Schedule - 110326.pdf (data date 03-Nov-26), activity M1020 'Site: Substantial / TCO (Contractual Date - 09-Jul-27)' forecast 15-Jul-27*. Same date on the 10/20/26 schedule. Driven by Cx1010 Final Testing/Cx/TaB and Cx1040 Owner's Punch Corrections both finishing 15-Jul-27."><b>Colas forecast:
+        July 15, 2027</b> &middot; <span id="tcoFcDays">171</span>
+        business days &middot; <span class="bad">4 working days past contract</span>
+        &middot; not contractual</div></div>
     <div class="kpi"><div class="l">Required pace to TCO</div>
       <div class="v bad">$2.54M/mo</div>
       <div class="s">vs $1.46M/mo actual, last 6 pay apps</div>
@@ -248,6 +252,10 @@ let n=0,skip=0,d=new Date(t);d.setDate(d.getDate()+1);
 while(d<=T){if(d.getDay()!==0&&d.getDay()!==6){
  if(H.has(iso(d)))skip++;else n++;}
  d.setDate(d.getDate()+1);}
+const F='2027-07-15',fe=document.getElementById('tcoFcDays');
+if(F&&fe){const FT=new Date(F+'T00:00:00');let m=0,e=new Date(t);e.setDate(e.getDate()+1);
+ while(e<=FT){if(e.getDay()!==0&&e.getDay()!==6&&!H.has(iso(e)))m++;e.setDate(e.getDate()+1);}
+ fe.textContent=m.toLocaleString();}
 const cal=Math.max(Math.round((T-t)/864e5),0);
 el.textContent=T<t?'passed':n.toLocaleString();
 sub.textContent='to July 9, 2027'+(T<t?' - the TCO date has passed':
