@@ -62,7 +62,7 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <header>
   <h1>CEV (Steelhead) &mdash; Pay App Dashboard</h1>
   <p>Through Pay App #14, period ending October 31, 2026
-     &middot; generated November 10, 2026 by <code>payapps</code></p>
+     &middot; generated November 11, 2026 by <code>payapps</code></p>
 </header>
 <div class="wrap">
   <div class="kpis">
@@ -75,9 +75,10 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
     <div class="kpi"><div class="l">Balance to finish</div>
       <div class="v">$20,916,995</div>
       <div class="s">retainage held $0</div></div>
-    <div class="kpi"><div class="l">Schedule variance</div>
-      <div class="v bad">-23.91 pts</div>
-      <div class="s">actual vs P6 baseline</div></div>
+    <div class="kpi"><div class="l">Progress vs plan</div>
+      <div class="v bad">-5.79 pts</div>
+      <div class="s">actual vs CCI 7/14 cost projection</div>
+      <div class="s">-$2.64M of work</div></div>
     <div class="kpi"><div class="l">Contingency left</div>
       <div class="v">$95,298</div>
       <div class="s">of $804,492</div></div>
@@ -106,11 +107,11 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
 <section class="panel" id="tab-schedule">
   <div class="kpis inline">
     <div class="kpi"><div class="l">Business days to TCO</div>
-      <div class="v" id="tcoDays">167</div>
-      <div class="s" id="tcoSub">to July 9, 2027 &middot; 241 calendar days
+      <div class="v" id="tcoDays">166</div>
+      <div class="s" id="tcoSub">to July 9, 2027 &middot; 240 calendar days
         &middot; 6 project holidays skipped</div>
       <div class="s fc" title="Colas P6, CEV - Full Schedule - 110326.pdf (data date 03-Nov-26), activity M1020 'Site: Substantial / TCO (Contractual Date - 09-Jul-27)' forecast 15-Jul-27*. Same date on the 10/20/26 schedule. Driven by Cx1010 Final Testing/Cx/TaB and Cx1040 Owner's Punch Corrections both finishing 15-Jul-27."><b>Colas forecast:
-        July 15, 2027</b> &middot; <span id="tcoFcDays">171</span>
+        July 15, 2027</b> &middot; <span id="tcoFcDays">170</span>
         business days &middot; <span class="bad">4 working days past contract</span>
         &middot; not contractual</div></div>
     <div class="kpi"><div class="l">Required pace to TCO</div>
@@ -122,14 +123,37 @@ footer{color:var(--grey);font-size:12px;text-align:center;padding:14px}
       <div class="s">CMAR Agreement Section 1.1 and Exhibit C-3 set July 12, 2027; change orders have moved it to July 9, 2027. Liquidated damages run off TCO Completion.</div></div>
   </div>
 
-  <div class="card"><h3>S-curve &mdash; P6 baseline vs CCI projection vs actual</h3>
+  <div class="card"><h3>S-curve &mdash; CCI 7/14/26 cost projection vs actual</h3>
     <div class="chart"><canvas id="scurve"></canvas></div></div>
 
-  <div class="card"><h3>Planned vs actual % &mdash; through October 2026</h3>
+  <div class="card"><h3>CCI projection vs actual % &mdash; through October 2026</h3>
     <div class="chart"><canvas id="pctBar"></canvas></div></div>
-<p class="src">Carried from the 10/23/26 logs, same period as this brief.</p>
-<div class="card prose"><h3>CCI Billing Projection (7/14/26) vs P6 Baseline vs Actual</h3><div class="scroll"><table><thead><tr><th>Month</th><th class="num">P6 Planned %</th><th class="num">CCI Projection %</th><th class="num">Actual %</th><th class="num">CCI vs P6</th><th class="num">Actual vs CCI</th></tr></thead><tbody><tr><td>Dec 25</td><td class="num">10.5%</td><td class="num">12.61%</td><td class="num">13.23%</td><td class="num">+2.11</td><td class="num">+0.62</td></tr><tr><td>Mar 26</td><td class="num">27.5%</td><td class="num">29.30%</td><td class="num">29.91%</td><td class="num">+1.80</td><td class="num">+0.61</td></tr><tr><td>Apr 26</td><td class="num">35.0%</td><td class="num">34.23%</td><td class="num">35.07%</td><td class="num">−0.77</td><td class="num">+0.84</td></tr><tr><td>May 26</td><td class="num">43.0%</td><td class="num">38.92%</td><td class="num">39.76%</td><td class="num">−4.08</td><td class="num">+0.84</td></tr><tr><td>Jun 26</td><td class="num">51.0%</td><td class="num">41.14%</td><td class="num">42.17%</td><td class="num">−9.86</td><td class="num">+1.03</td></tr><tr><td>Jul 26</td><td class="num">59.0%</td><td class="num">44.37%</td><td class="num">44.34%</td><td class="num">−14.63</td><td class="num">−0.03</td></tr><tr><td>Aug 26</td><td class="num">66.0%</td><td class="num">48.89%</td><td class="num">46.84%</td><td class="num">−17.11</td><td class="num">−2.05</td></tr><tr><td>Sep 26</td><td class="num">72.0%</td><td class="num">53.17%</td><td class="num">49.33%</td><td class="num">−18.83</td><td class="num">−3.84</td></tr><tr class="group"><td colspan="6">Forward — CCI projection only, rebased on actual through 9/30/26</td></tr><tr><td>Oct 26</td><td class="num">78.0%</td><td class="num">59.88%</td><td class="num">—</td><td class="num">−18.12</td><td class="num">—</td></tr><tr><td>Nov 26</td><td class="num">83.0%</td><td class="num">66.18%</td><td class="num">—</td><td class="num">−16.82</td><td class="num">—</td></tr><tr><td>Dec 26</td><td class="num">87.5%</td><td class="num">74.29%</td><td class="num">—</td><td class="num">−13.21</td><td class="num">—</td></tr><tr><td>Jan 27</td><td class="num">91.0%</td><td class="num">80.96%</td><td class="num">—</td><td class="num">−10.04</td><td class="num">—</td></tr><tr><td>Feb 27</td><td class="num">94.0%</td><td class="num">86.93%</td><td class="num">—</td><td class="num">−7.07</td><td class="num">—</td></tr><tr><td>Mar 27</td><td class="num">96.5%</td><td class="num">90.54%</td><td class="num">—</td><td class="num">−5.96</td><td class="num">—</td></tr><tr><td>Apr 27</td><td class="num">98.0%</td><td class="num">92.86%</td><td class="num">—</td><td class="num">−5.14</td><td class="num">—</td></tr><tr><td>May 27</td><td class="num">99.0%</td><td class="num">94.10%</td><td class="num">—</td><td class="num">−4.90</td><td class="num">—</td></tr><tr><td>Jun 27</td><td class="num">99.7%</td><td class="num">95.14%</td><td class="num">—</td><td class="num">−4.56</td><td class="num">—</td></tr><tr><td>Jul 27 (TCO)</td><td class="num">100.0%</td><td class="num">95.83%</td><td class="num">—</td><td class="num">−4.17</td><td class="num">—</td></tr></tbody></table></div></div>
-<div class="card prose"><h3>Variance Detail</h3><div class="scroll"><table><thead><tr><th>Period</th><th class="num">Planned %</th><th class="num">Actual %</th><th class="num">Variance</th><th class="num">Actual $</th></tr></thead><tbody><tr><td>Sep 25</td><td class="num">1.0%</td><td class="num">1.48%</td><td class="num">+0.48%</td><td class="num">$636,962</td></tr><tr><td>Oct 25</td><td class="num">3.0%</td><td class="num">5.29%</td><td class="num">+2.29%</td><td class="num">$2,303,286</td></tr><tr><td>Nov 25</td><td class="num">6.5%</td><td class="num">9.84%</td><td class="num">+3.34%</td><td class="num">$4,317,062</td></tr><tr><td>Dec 25</td><td class="num">10.5%</td><td class="num">13.23%</td><td class="num">+2.73%</td><td class="num">$5,825,247</td></tr><tr><td>Jan 26</td><td class="num">15.5%</td><td class="num">16.84%</td><td class="num">+1.34%</td><td class="num">$7,593,909</td></tr><tr><td>Feb 26</td><td class="num">21.0%</td><td class="num">26.84%</td><td class="num">+5.84%</td><td class="num">$12,104,372</td></tr><tr><td>Mar 26</td><td class="num">27.5%</td><td class="num">29.91%</td><td class="num">+2.41%</td><td class="num">$13,495,871</td></tr><tr><td>Apr 26</td><td class="num">35.0%</td><td class="num">35.07%</td><td class="num">+0.07%</td><td class="num">$15,873,609</td></tr><tr><td>May 26</td><td class="num">43.0%</td><td class="num">39.76%</td><td class="num">−3.24%</td><td class="num">$18,020,747</td></tr><tr><td>Jun 26</td><td class="num">51.0%</td><td class="num">42.17%</td><td class="num">−8.83%</td><td class="num">$19,110,621</td></tr><tr><td>Jul 26</td><td class="num">59.0%</td><td class="num">44.34%</td><td class="num">−14.66%</td><td class="num">$20,133,274</td></tr><tr><td>Aug 26</td><td class="num">66.0%</td><td class="num">46.84%</td><td class="num">−19.16%</td><td class="num">$21,309,433</td></tr><tr><td>Sep 26</td><td class="num">72.0%</td><td class="num">49.33%</td><td class="num">−22.67%</td><td class="num">$22,441,813</td></tr></tbody></table></div></div>
+
+  <div class="card prose"><h3>Colas schedule health &mdash; SmartPM monthly reports</h3>
+    <div class="find"><b>SmartPM measures float against 7/14/27, not 7/9/27.</b> That is the contract date before OCO #8's 5-day credit. On the 10/20/26 update it prints float -1; against 7/9/27 the 7/15/27 forecast is <b>-4 working days</b>.</div>
+    <p class="src">Float is recomputed in working days (project holidays skipped) against the contract
+    date in force on each update: 7/9/27 from OCO #8 (4/24/26) on, 7/14/27 before it. Net = planned acceleration less critical-path delay that period: when it
+    goes negative the end date moves. Cumulative delay is SmartPM's total since the baseline,
+    held off the end date by resequencing. SmartPM's own planned/actual % complete is not shown:
+    its basis changed between the 8/25 and 9/22 updates (actual 16% to 46%) and its planned curve
+    is redrawn every month.</p>
+    <div class="scroll"><table><thead><tr><th>Update</th><th>Forecast end</th>
+    <th>Contract date in force</th><th class="num">Float (working days)</th><th class="num">SmartPM float</th>
+    <th class="num">CP delay</th><th class="num">Accel.</th><th class="num">Net</th>
+    <th class="num">Cum. delay</th><th class="num">Health</th>
+    <th style="min-width:300px">Largest delay driver (days)</th></tr></thead>
+    <tbody><tr><td>10/20/26</td><td>7/15/27</td><td>7/9/27</td><td class="num bad">-4</td><td class="num">-1</td><td class="num">13</td><td class="num">13</td><td class="num ">+0</td><td class="num">242</td><td class="num">94</td><td>C1810 - Int: Reinforce and Pour SOMD - Mezz and Risers (13)</td></tr><tr><td>9/22/26</td><td>7/14/27</td><td>7/9/27</td><td class="num bad">-3</td><td class="num">+0</td><td class="num">10</td><td class="num">5</td><td class="num bad">-5</td><td class="num">200</td><td class="num">93</td><td>C2280 - Int: Reinforce and Pour SOMD - L2 (10)</td></tr><tr><td>8/25/26</td><td>7/9/27</td><td>7/9/27</td><td class="num ">+0</td><td class="num">+5</td><td class="num">29</td><td class="num">25</td><td class="num bad">-4</td><td class="num">213</td><td class="num">82</td><td>S2040 - Prep, Sub: Fabric Wrapped Wall and Ceiling Panels (19)</td></tr><tr><td>7/21/26</td><td>7/9/27</td><td>7/9/27</td><td class="num ">+0</td><td class="num">+5</td><td class="num">9</td><td class="num">7</td><td class="num bad">-2</td><td class="num">182</td><td class="num">96</td><td>18 - A2 CMU - Mezz Level Height &amp; Cured (7)</td></tr><tr><td>6/23/26</td><td>7/9/27</td><td>7/9/27</td><td class="num ">+0</td><td class="num">+5</td><td class="num">23</td><td class="num">26</td><td class="num ">+3</td><td class="num">162</td><td class="num">96</td><td>S2620 - Prep, Sub: Vibration and Seismic Controls for Plumbing Piping and Equipment (21)</td></tr><tr><td>5/26/26</td><td>7/13/27</td><td>7/9/27</td><td class="num bad">-2</td><td class="num">+1</td><td class="num">20</td><td class="num">22</td><td class="num ">+2</td><td class="num">139</td><td class="num">92</td><td>S4520 - Prep, Sub: DAS System (17)</td></tr><tr><td>4/21/26</td><td>7/15/27</td><td>7/14/27</td><td class="num bad">-1</td><td class="num">-1</td><td class="num">22</td><td class="num">26</td><td class="num ">+4</td><td class="num">133</td><td class="num">92</td><td>S1240 - Prep, Sub: Decorative Metal Railings (20)</td></tr><tr><td>3/24/26</td><td>7/19/27</td><td>7/14/27</td><td class="num bad">-3</td><td class="num">-5</td><td class="num">0</td><td class="num">0</td><td class="num ">+0</td><td class="num">103</td><td class="num">92</td><td>&mdash;</td></tr><tr><td>2/23/26</td><td>7/12/27</td><td>7/14/27</td><td class="num ">+2</td><td class="num">+2</td><td class="num">11</td><td class="num">10</td><td class="num bad">-1</td><td class="num">97</td><td class="num">91</td><td>S4460 - Rev, Appv: Fall Restraints and Lifelines - City Approval (11)</td></tr><tr><td>1/27/26</td><td>7/12/27</td><td>7/14/27</td><td class="num ">+2</td><td class="num">+2</td><td class="num">12</td><td class="num">14</td><td class="num ">+2</td><td class="num">87</td><td class="num">90</td><td>S1580 - Prep, Sub: Penetration Firestopping (12)</td></tr><tr><td>12/23/25</td><td>7/14/27</td><td>7/14/27</td><td class="num ">+0</td><td class="num">+0</td><td class="num">16</td><td class="num">22</td><td class="num ">+6</td><td class="num">75</td><td class="num">90</td><td>S1080 - Prep, Sub: Structural Steel Framing - Z1 and Z3 Skeleton (13)</td></tr></tbody></table></div>
+    <p class="src">Source: 11 SmartPM summary PDFs in 02 Schedules / Schedule Status
+    Reports, read directly on each run.</p></div>
+
+  <div class="card prose"><h3>CCI 7/14/26 cost projection vs actual, by month</h3>
+    <p class="src">Actual = completed &amp; stored &divide; contract to date. Through Jun-26 the
+    projection is mostly backfilled actuals, so the gap there is near zero by construction; Jul-26
+    is the first month CCI forecast. Variance in points.</p>
+    <div class="scroll"><table><thead><tr><th>Month</th><th class="num">CCI projection</th>
+    <th class="num">Actual</th><th class="num">Actual vs CCI</th></tr></thead>
+    <tbody><tr><td>Sep 2025</td><td class="num">1.48%</td><td class="num">1.48%</td><td class="num good">+0.00</td></tr><tr><td>Oct 2025</td><td class="num">5.29%</td><td class="num">5.29%</td><td class="num good">+0.00</td></tr><tr><td>Nov 2025</td><td class="num">9.84%</td><td class="num">9.84%</td><td class="num good">+0.00</td></tr><tr><td>Dec 2025</td><td class="num">12.61%</td><td class="num">13.23%</td><td class="num good">+0.62</td></tr><tr><td>Jan 2026</td><td class="num">16.23%</td><td class="num">16.84%</td><td class="num good">+0.61</td></tr><tr><td>Feb 2026</td><td class="num">26.23%</td><td class="num">26.84%</td><td class="num good">+0.61</td></tr><tr><td>Mar 2026</td><td class="num">29.30%</td><td class="num">29.91%</td><td class="num good">+0.61</td></tr><tr><td>Apr 2026</td><td class="num">34.23%</td><td class="num">35.07%</td><td class="num good">+0.84</td></tr><tr><td>May 2026</td><td class="num">38.92%</td><td class="num">39.76%</td><td class="num good">+0.84</td></tr><tr><td>Jun 2026</td><td class="num">41.14%</td><td class="num">42.17%</td><td class="num good">+1.03</td></tr><tr><td>Jul 2026</td><td class="num">44.37%</td><td class="num">44.34%</td><td class="num bad">-0.03</td></tr><tr><td>Aug 2026</td><td class="num">48.89%</td><td class="num">46.84%</td><td class="num bad">-2.05</td></tr><tr><td>Sep 2026</td><td class="num">53.17%</td><td class="num">49.33%</td><td class="num bad">-3.84</td></tr><tr><td>Oct 2026</td><td class="num">59.88%</td><td class="num">54.09%</td><td class="num bad">-5.79</td></tr><tr><td>Nov 2026</td><td class="num">66.18%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Dec 2026</td><td class="num">74.29%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Jan 2027</td><td class="num">80.96%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Feb 2027</td><td class="num">86.93%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Mar 2027</td><td class="num">90.54%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Apr 2027</td><td class="num">92.86%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>May 2027</td><td class="num">94.10%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Jun 2027</td><td class="num">95.14%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr><tr><td>Jul 2027</td><td class="num">95.83%</td><td class="num">&mdash;</td><td class="num">&mdash;</td></tr></tbody></table></div></div>
+
 </section>
 <section class="panel" id="tab-contingency">
   <div class="card"><h3>Contingency &mdash; used, booked, remaining</h3>
@@ -184,10 +208,8 @@ new Chart(mon,{type:'bar',data:{labels:["PA1", "PA2", "PA3", "PA4", "PA5", "PA6"
  tooltip:{callbacks:{label:c=>c.dataset.label+': $'+c.raw.toLocaleString()}}},
  scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:usd}}}}});
 new Chart(scurve,{type:'line',data:{labels:["Sep 2025", "Oct 2025", "Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026", "Aug 2026", "Sep 2026", "Oct 2026", "Nov 2026", "Dec 2026", "Jan 2027", "Feb 2027", "Mar 2027", "Apr 2027", "May 2027", "Jun 2027", "Jul 2027"],datasets:[
- {label:'Planned %',data:[1.0, 3.0, 6.5, 10.5, 15.5, 21.0, 27.5, 35.0, 43.0, 51.0, 59.0, 66.0, 72.0, 78.0, 83.0, 87.5, 91.0, 94.0, 96.5, 98.0, 99.0, 99.7, 100.0],borderColor:C.warning,borderDash:[6,4],
-  tension:.3,pointRadius:0},
- {label:'CCI projection %',data:[1.48, 5.29, 9.84, 12.61, 16.23, 26.23, 29.3, 34.23, 38.92, 41.14, 44.37, 48.89, 53.17, 59.88, 66.18, 74.29, 80.96, 86.93, 90.54, 92.86, 94.1, 95.14, 95.83],borderColor:'#7b4fa8',
-  borderDash:[3,3],tension:.3,pointRadius:0},
+ {label:'CCI 7/14 projection %',data:[1.48, 5.29, 9.84, 12.61, 16.23, 26.23, 29.3, 34.23, 38.92, 41.14, 44.37, 48.89, 53.17, 59.88, 66.18, 74.29, 80.96, 86.93, 90.54, 92.86, 94.1, 95.14, 95.83],borderColor:'#7b4fa8',
+  borderDash:[6,4],tension:.3,pointRadius:0},
  {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, 39.76, 42.17, 44.34, 46.84, 49.33, 54.09, null, null, null, null, null, null, null, null, null],borderColor:C.success,
   backgroundColor:'rgba(44,138,62,.12)',fill:true,tension:.3,pointRadius:3,
   spanGaps:false}]},
@@ -200,9 +222,8 @@ new Chart(cont,{type:'doughnut',data:{labels:['Used','Booked','Remaining'],
  plugins:{legend:{position:'bottom'},tooltip:{callbacks:{
  label:c=>c.label+': $'+c.raw.toLocaleString()}}}}});
 new Chart(pctBar,{type:'bar',data:{labels:["Sep 25", "Oct 25", "Nov 25", "Dec 25", "Jan 26", "Feb 26", "Mar 26", "Apr 26", "May 26", "Jun 26", "Jul 26", "Aug 26", "Sep 26", "Oct 26"],datasets:[
- {label:'Planned %',data:[1.0, 3.0, 6.5, 10.5, 15.5, 21.0, 27.5, 35.0, 43.0, 51.0, 59.0, 66.0, 72.0, 78.0],backgroundColor:C.warning},
- {label:'CCI projection %',data:[1.48, 5.29, 9.84, 12.61, 16.23, 26.23, 29.3, 34.23, 38.92, 41.14, 44.37, 48.89, 53.17, 59.88],backgroundColor:'#7b4fa8'},
- {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, 39.76, 42.17, 44.34, 46.84, 49.33, 54.09],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger,C.danger,C.danger,C.danger,C.danger,C.danger]}]},
+ {label:'CCI 7/14 projection %',data:[1.48, 5.29, 9.84, 12.61, 16.23, 26.23, 29.3, 34.23, 38.92, 41.14, 44.37, 48.89, 53.17, 59.88],backgroundColor:'#7b4fa8'},
+ {label:'Actual %',data:[1.48, 5.29, 9.84, 13.23, 16.84, 26.84, 29.91, 35.07, 39.76, 42.17, 44.34, 46.84, 49.33, 54.09],backgroundColor:[C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.success,C.danger,C.danger,C.danger,C.danger]}]},
  options:{maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
  scales:{y:{ticks:{callback:v=>v+'%'}}}}});
 new Chart(burn,{type:'line',data:{labels:["Start", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14"],datasets:[{label:'Remaining',data:[804492, 804492, 800230, 773280, 734661, 638359, 632149, 624994, 347396, 340226, 143514, 119714, 116548, 95566, 95298],borderColor:C.danger,backgroundColor:'rgba(158,42,43,.12)',fill:true,tension:.2,pointRadius:3}]},options:{maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+c.raw.toLocaleString()}}},scales:{y:{ticks:{callback:v=>'$'+(v/1000).toFixed(0)+'K'}}}}});
